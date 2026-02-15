@@ -1,0 +1,198 @@
+resource "kubernetes_deployment_v1" "apigee_cutover" {
+  metadata {
+    name      = "apigee-cutover"
+    namespace = "secure-production-app"
+    labels = {
+      app = "apigee-cutover"
+    }
+  }
+
+  spec {
+    replicas = 2
+
+    selector {
+      match_labels = {
+        app = "apigee-cutover"
+      }
+    }
+
+    template {
+      metadata {
+        labels = {
+          app = "apigee-cutover"
+        }
+      }
+
+      spec {
+        security_context {
+          run_as_non_root = true
+          run_as_user     = 1001
+          fs_group        = 1001
+
+          seccomp_profile {
+            type = "RuntimeDefault"
+          }
+        }
+
+        container {
+          name  = "apigee-cutover"
+          image = var.apigee_cutover_image
+
+          port {
+            container_port = 8080
+          }
+
+          # 🔴 ONLY ONE BLOCK ALLOWED
+          security_context {
+            run_as_non_root            = true
+            run_as_user                = 1001
+            allow_privilege_escalation = false
+            read_only_root_filesystem  = true
+
+            capabilities {
+              drop = ["ALL"]
+            }
+          }
+
+          env {
+            name  = "SERVER_SERVLET_CONTEXT_PATH"
+            value = "/probestack/v1/apigee/cutover"
+          }
+
+          env {
+            name  = "SPRING_PROFILES_ACTIVE"
+            value = "cloud"
+          }
+
+          env {
+            name  = "SPRING_CLOUD_GCP_PROJECT_ID"
+            value = var.project_id
+          }
+
+          env {
+            name = "MONGODB_URI"
+            value_from {
+              secret_key_ref {
+                name = "mongodb-secret"
+                key  = "MONGODB_URI"
+              }
+            }
+          }
+
+          env {
+            name  = "SPRING_DATASOURCE_USERNAME"
+            value = var.cloudsql_user
+          }
+
+          env {
+            name = "SPRING_DATASOURCE_PASSWORD"
+            value_from {
+              secret_key_ref {
+                name = "cloudsql-db-secret"
+                key  = "password"
+              }
+            }
+          }
+
+          env {
+            name  = "SPRING_CLOUD_GCP_SQL_INSTANCE_CONNECTION_NAME"
+            value = "${var.project_id}:${var.region}:probestack-mysql-prod"
+          }
+
+          env {
+            name  = "SPRING_CLOUD_GCP_SQL_DATABASE_NAME"
+            value = "probestack-prod-db"
+          }
+
+          resources {
+            requests = {
+              cpu    = "50m"
+              memory = "300Mi"
+            }
+            limits = {
+              cpu    = "1000m"
+              memory = "1Gi"
+            }
+          }
+
+          readiness_probe {
+            http_get {
+              path = "/probestack/v1/apigee/cutover"
+              port = 8080
+            }
+            initial_delay_seconds = 30
+            period_seconds        = 10
+          }
+
+          liveness_probe {
+            http_get {
+              path = "/probestack/v1/apigee/cutover/actuator/health"
+              port = 8080
+            }
+            initial_delay_seconds = 60
+            period_seconds        = 20
+          }
+
+          volume_mount {
+            name       = "tmp"
+            mount_path = "/tmp"
+          }
+        }
+
+        volume {
+          name = "tmp"
+          empty_dir {}
+        }
+      }
+    }
+  }
+}
+
+resource "kubectl_manifest" "apigee_cutover_backend_config" {
+  yaml_body = <<YAML
+apiVersion: cloud.google.com/v1
+kind: BackendConfig
+metadata:
+  name: apigee-cutover-backend-config
+  namespace: secure-production-app
+spec:
+  healthCheck:
+    requestPath: /probestack/v1/apigee/cutover
+    type: HTTP
+YAML
+}
+
+resource "kubernetes_service_v1" "apigee_cutover" {
+  metadata {
+    name      = "apigee-cutover"
+    namespace = "secure-production-app"
+
+    annotations = {
+      "cloud.google.com/neg"            = "{\"ingress\": true}"
+      "cloud.google.com/backend-config" = "{\"default\": \"apigee-cutover-backend-config\"}"
+    }
+
+    labels = {
+      app = "apigee-cutover"
+    }
+  }
+
+  spec {
+    selector = {
+      app = "apigee-cutover"
+    }
+
+    port {
+      port        = 80
+      target_port = 8080
+    }
+
+    type = "NodePort"
+  }
+
+  lifecycle {
+    ignore_changes = [
+      metadata[0].annotations["cloud.google.com/neg-status"]
+    ]
+  }
+}

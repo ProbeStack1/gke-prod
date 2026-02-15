@@ -1,0 +1,7 @@
+{
+  "spec": {
+    "urlRewrite": {
+      "pathPrefixRewrite": "/"
+    }
+  }
+}
