@@ -43,7 +43,6 @@ resource "kubernetes_deployment_v1" "probestack_apigee_discovery_service" {
             container_port = 8080
           }
 
-          # ✅ SINGLE container security_context
           security_context {
             run_as_non_root            = true
             run_as_user                = 1001
@@ -149,7 +148,7 @@ metadata:
   namespace: secure-production-app
 spec:
   healthCheck:
-    requestPath: /probestack/v1/apigee/actuator/health
+    requestPath: /probestack/v1/apigee/discovery/actuator/health
     port: 8080
     type: HTTP
 YAML

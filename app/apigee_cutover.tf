@@ -42,7 +42,6 @@ resource "kubernetes_deployment_v1" "apigee_cutover" {
             container_port = 8080
           }
 
-          # 🔴 ONLY ONE BLOCK ALLOWED
           security_context {
             run_as_non_root            = true
             run_as_user                = 1001
@@ -157,7 +156,7 @@ metadata:
   namespace: secure-production-app
 spec:
   healthCheck:
-    requestPath: /probestack/v1/apigee/cutover
+    requestPath: /probestack/v1/apigee/cutover/actuator/health
     type: HTTP
 YAML
 }

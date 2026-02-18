@@ -43,7 +43,6 @@ resource "kubernetes_deployment_v1" "probestack_apigee_migration_service" {
             container_port = 8080
           }
 
-          # ✅ SINGLE container security_context
           security_context {
             run_as_non_root            = true
             run_as_user                = 1001
