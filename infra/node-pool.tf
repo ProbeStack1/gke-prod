@@ -19,7 +19,7 @@ resource "google_container_node_pool" "main" {
 
     image_type = "COS_CONTAINERD"
 
-    machine_type = "e2-standard-4"
+    machine_type = "e2-medium"
 
     shielded_instance_config {
       enable_secure_boot          = true

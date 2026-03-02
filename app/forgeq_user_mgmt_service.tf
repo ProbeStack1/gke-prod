@@ -1,25 +1,25 @@
-resource "kubernetes_deployment_v1" "apigee_cutover" {
+resource "kubernetes_deployment_v1" "forgeq_user_mgmt_service" {
   metadata {
-    name      = "apigee-cutover"
+    name      = "forgeq-user-mgmt-service"
     namespace = "secure-production-app"
     labels = {
-      app = "apigee-cutover"
+      app = "forgeq-user-mgmt-service"
     }
   }
 
   spec {
-    replicas = 2
+    replicas = 1
 
     selector {
       match_labels = {
-        app = "apigee-cutover"
+        app = "forgeq-user-mgmt-service"
       }
     }
 
     template {
       metadata {
         labels = {
-          app = "apigee-cutover"
+          app = "forgeq-user-mgmt-service"
         }
       }
 
@@ -35,8 +35,8 @@ resource "kubernetes_deployment_v1" "apigee_cutover" {
         }
 
         container {
-          name  = "apigee-cutover"
-          image = var.apigee_cutover_image
+          name  = "forgeq-user-mgmt-service"
+          image = var.forgeq_user_mgmt_image
 
           port {
             container_port = 8080
@@ -53,9 +53,12 @@ resource "kubernetes_deployment_v1" "apigee_cutover" {
             }
           }
 
+          # =============================
+          # SPRING CONTEXT PATH
+          # =============================
           env {
             name  = "SERVER_SERVLET_CONTEXT_PATH"
-            value = "/cutover/v1"
+            value = "/api/v1/users"
           }
 
           env {
@@ -68,14 +71,15 @@ resource "kubernetes_deployment_v1" "apigee_cutover" {
             value = var.project_id
           }
 
+          # If using Cloud SQL
           env {
-            name = "MONGODB_URI"
-            value_from {
-              secret_key_ref {
-                name = "mongodb-secret"
-                key  = "MONGODB_URI"
-              }
-            }
+            name  = "SPRING_CLOUD_GCP_SQL_INSTANCE_CONNECTION_NAME"
+            value = "${var.project_id}:${var.region}:probestack-mysql-prod"
+          }
+
+          env {
+            name  = "SPRING_CLOUD_GCP_SQL_DATABASE_NAME"
+            value = "probestack-prod-db"
           }
 
           env {
@@ -93,16 +97,6 @@ resource "kubernetes_deployment_v1" "apigee_cutover" {
             }
           }
 
-          env {
-            name  = "SPRING_CLOUD_GCP_SQL_INSTANCE_CONNECTION_NAME"
-            value = "${var.project_id}:${var.region}:probestack-mysql-prod"
-          }
-
-          env {
-            name  = "SPRING_CLOUD_GCP_SQL_DATABASE_NAME"
-            value = "probestack-prod-db"
-          }
-
           resources {
             requests = {
               cpu    = "50m"
@@ -116,7 +110,7 @@ resource "kubernetes_deployment_v1" "apigee_cutover" {
 
           readiness_probe {
             http_get {
-              path = "/cutover/v1"
+              path = "/api/v1/users/actuator/health"
               port = 8080
             }
             initial_delay_seconds = 30
@@ -125,7 +119,7 @@ resource "kubernetes_deployment_v1" "apigee_cutover" {
 
           liveness_probe {
             http_get {
-              path = "/cutover/v1/actuator/health"
+              path = "/api/v1/users/actuator/health"
               port = 8080
             }
             initial_delay_seconds = 60
@@ -146,39 +140,40 @@ resource "kubernetes_deployment_v1" "apigee_cutover" {
     }
   }
 }
-
-resource "kubectl_manifest" "apigee_cutover_backend_config" {
+resource "kubectl_manifest" "forgeq_user_mgmt_backend_config" {
   yaml_body = <<YAML
 apiVersion: cloud.google.com/v1
 kind: BackendConfig
 metadata:
-  name: apigee-cutover-backend-config
+  name: forgeq-user-mgmt-backend-config
   namespace: secure-production-app
 spec:
   healthCheck:
-    requestPath: /cutover/v1/actuator/health
+    requestPath: /api/v1/users/actuator/health
+    port: 8080
     type: HTTP
 YAML
 }
-
-resource "kubernetes_service_v1" "apigee_cutover" {
+resource "kubernetes_service_v1" "forgeq_user_mgmt_service" {
   metadata {
-    name      = "apigee-cutover"
+    name      = "forgeq-user-mgmt-service"
     namespace = "secure-production-app"
 
     annotations = {
-      "cloud.google.com/neg"            = "{\"ingress\": true}"
-      "cloud.google.com/backend-config" = "{\"default\": \"apigee-cutover-backend-config\"}"
+      "cloud.google.com/neg" = "{\"ingress\": true}"
+      "cloud.google.com/backend-config" = jsonencode({
+        default = "forgeq-user-mgmt-backend-config"
+      })
     }
 
     labels = {
-      app = "apigee-cutover"
+      app = "forgeq-user-mgmt-service"
     }
   }
 
   spec {
     selector = {
-      app = "apigee-cutover"
+      app = "forgeq-user-mgmt-service"
     }
 
     port {

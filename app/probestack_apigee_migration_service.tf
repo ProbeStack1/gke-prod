@@ -56,7 +56,7 @@ resource "kubernetes_deployment_v1" "probestack_apigee_migration_service" {
 
           env {
             name  = "SERVER_SERVLET_CONTEXT_PATH"
-            value = "/probestack/v1/apigee/migration"
+            value = "/migration/v1"
           }
 
           env {
@@ -117,7 +117,7 @@ resource "kubernetes_deployment_v1" "probestack_apigee_migration_service" {
 
           readiness_probe {
             http_get {
-              path = "/probestack/v1/apigee/migration/actuator/health"
+              path = "/migration/v1/actuator/health"
               port = 8080
             }
             initial_delay_seconds = 30
@@ -148,7 +148,7 @@ metadata:
   namespace: secure-production-app
 spec:
   healthCheck:
-    requestPath: /probestack/v1/apigee/migration/actuator/health
+    requestPath: /migration/v1/actuator/health
     port: 8080
     type: HTTP
 YAML

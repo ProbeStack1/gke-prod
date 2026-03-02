@@ -56,7 +56,7 @@ resource "kubernetes_deployment_v1" "probestack_apigee_deployment_service" {
 
           env {
             name  = "SERVER_SERVLET_CONTEXT_PATH"
-            value = "/probestack/v1/apigee"
+            value = "/deployments/v1"
           }
 
           env {
@@ -117,7 +117,7 @@ resource "kubernetes_deployment_v1" "probestack_apigee_deployment_service" {
 
           readiness_probe {
             http_get {
-              path = "/probestack/v1/apigee/actuator/health"
+              path = "/deployments/v1/actuator/health"
               port = 8080
             }
             initial_delay_seconds = 30
@@ -126,7 +126,7 @@ resource "kubernetes_deployment_v1" "probestack_apigee_deployment_service" {
 
           liveness_probe {
             http_get {
-              path = "/probestack/v1/apigee/actuator/health"
+              path = "/deployments/v1/actuator/health"
               port = 8080
             }
             initial_delay_seconds = 60
@@ -157,7 +157,7 @@ metadata:
   namespace: secure-production-app
 spec:
   healthCheck:
-    requestPath: /probestack/v1/apigee/deployments/actuator/health
+    requestPath: /deployments/v1/actuator/health
     port: 8080
     type: HTTP
 YAML

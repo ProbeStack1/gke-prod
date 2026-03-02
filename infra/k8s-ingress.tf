@@ -78,7 +78,7 @@ resource "kubernetes_ingress_v1" "prod_ingress" {
         }
 
         path {
-          path      = "/probestack/v1/apigee/edge"
+          path      = "/config/v1"
           path_type = "Prefix"
           backend {
             service {
@@ -89,29 +89,7 @@ resource "kubernetes_ingress_v1" "prod_ingress" {
         }
 
         path {
-          path      = "/probestack/v1/apigee/x"
-          path_type = "Prefix"
-          backend {
-            service {
-              name = "probestack-profile-config-service"
-              port { number = 80 }
-            }
-          }
-        }
-
-        path {
-          path      = "/probestack/v1/cloud-storage/config"
-          path_type = "Prefix"
-          backend {
-            service {
-              name = "probestack-profile-config-service"
-              port { number = 80 }
-            }
-          }
-        }
-
-        path {
-          path      = "/probestack/v1/apigee/assetinfo"
+          path      = "/discovery/v1"
           path_type = "Prefix"
           backend {
             service {
@@ -122,18 +100,7 @@ resource "kubernetes_ingress_v1" "prod_ingress" {
         }
 
         path {
-          path      = "/probestack/v1/apigee/discovery"
-          path_type = "Prefix"
-          backend {
-            service {
-              name = "probestack-apigee-discovery-service"
-              port { number = 80 }
-            }
-          }
-        }
-
-        path {
-          path      = "/probestack/v1/apigee/assessment"
+          path      = "/assessment/v1"
           path_type = "Prefix"
           backend {
             service {
@@ -144,7 +111,7 @@ resource "kubernetes_ingress_v1" "prod_ingress" {
         }
 
         path {
-          path      = "/probestack/v1/apigee/migration"
+          path      = "/migration/v1"
           path_type = "Prefix"
           backend {
             service {
@@ -155,7 +122,7 @@ resource "kubernetes_ingress_v1" "prod_ingress" {
         }
 
         path {
-          path      = "/probestack/v1/apigee/deployments"
+          path      = "/deployments/v1"
           path_type = "Prefix"
           backend {
             service {
@@ -166,22 +133,55 @@ resource "kubernetes_ingress_v1" "prod_ingress" {
         }
 
         path {
-          path      = "/probestack/v1/apigee/proxies/validate"
-          path_type = "Prefix"
-          backend {
-            service {
-              name = "probestack-apigee-deployment-service"
-              port { number = 80 }
-            }
-          }
-        }
-
-        path {
-          path      = "/probestack/v1/apigee/cutover"
+          path      = "/cutover/v1"
           path_type = "Prefix"
           backend {
             service {
               name = "apigee-cutover"
+              port { number = 80 }
+            }
+          }
+        }
+
+        path {
+          path      = "/api/v1/users"
+          path_type = "Prefix"
+          backend {
+            service {
+              name = "forgeq-user-mgmt-service"
+              port { number = 80 }
+            }
+          }
+        }
+
+        path {
+          path      = "/api/v1/workspaces"
+          path_type = "Prefix"
+          backend {
+            service {
+              name = "forgeq-workspace-mgmt-service"
+              port { number = 80 }
+            }
+          }
+        }
+
+        path {
+          path      = "/api/v1/collections"
+          path_type = "Prefix"
+          backend {
+            service {
+              name = "forgeq-collection-management-service"
+              port { number = 80 }
+            }
+          }
+        }
+
+        path {
+          path      = "/api/v1/monitors"
+          path_type = "Prefix"
+          backend {
+            service {
+              name = "forgeq-monitor-management-service"
               port { number = 80 }
             }
           }
