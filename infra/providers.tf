@@ -11,11 +11,6 @@ terraform {
       source  = "hashicorp/kubernetes"
       version = "~> 2.25"
     }
-
-    kubectl = {
-      source  = "gavinbunney/kubectl"
-      version = "~> 1.14"
-    }
   }
 }
 
@@ -27,20 +22,11 @@ provider "google" {
 data "google_client_config" "default" {}
 
 provider "kubernetes" {
-  host                   = "https://${google_container_cluster.primary.endpoint}"
-  token                  = data.google_client_config.default.access_token
+  host = "https://${google_container_cluster.zonal.endpoint}"
+
+  token = data.google_client_config.default.access_token
+
   cluster_ca_certificate = base64decode(
-    google_container_cluster.primary.master_auth[0].cluster_ca_certificate
+    google_container_cluster.zonal.master_auth[0].cluster_ca_certificate
   )
-}
-
-
-provider "kubectl" {
-  host                   = "https://${google_container_cluster.primary.endpoint}"
-  token                  = data.google_client_config.default.access_token
-  cluster_ca_certificate = base64decode(
-    google_container_cluster.primary.master_auth[0].cluster_ca_certificate
-  )
-
-  load_config_file = false
 }

@@ -32,7 +32,7 @@ resource "kubernetes_deployment_v1" "react_admin" {
   }
 
   spec {
-    replicas = 2
+    replicas = 1
 
     selector {
       match_labels = {

@@ -1,54 +1,73 @@
+############################################
+# CLOUD SQL INSTANCE (COST OPTIMIZED)
+############################################
+
 resource "google_sql_database_instance" "mysql" {
-  name             = var.db_instance_name
+
+  name             = "probestack-mysql-prod"
   region           = var.region
   database_version = "MYSQL_8_0"
 
   settings {
-    tier = var.db_tier
+
+    tier              = var.db_tier
+    availability_type = "ZONAL"
+
+    # Cloud SQL only supports PD_SSD or PD_HDD
+    disk_type = "PD_SSD"
+
+    disk_autoresize = true
 
     ip_configuration {
-      ipv4_enabled    = false # Disable Public IP
-      private_network = google_compute_network.vpc.id # Updated to use the variable-based network resource
+
+      ipv4_enabled    = false
+      private_network = google_compute_network.vpc.id
+
       enable_private_path_for_google_cloud_services = true
-      
-      require_ssl = true
+
+      # Enforce encrypted connections
+      ssl_mode = "ENCRYPTED_ONLY"
     }
 
-    availability_type = "REGIONAL"
-
     backup_configuration {
-      enabled                        = true
-      binary_log_enabled             = true # Enabling binary logs enables PITR for MySQL automatically
-      start_time                     = "02:00" # UTC
-      
-      transaction_log_retention_days = 7 
+
+      enabled            = true
+      binary_log_enabled = true
+      start_time         = "02:00"
 
       backup_retention_settings {
-        retained_backups = 14
+        retained_backups = 7
         retention_unit   = "COUNT"
       }
     }
-
-    maintenance_window {
-      day  = 7 # Sunday
-      hour = 3 # 3 AM
-    }
-    
-    disk_autoresize = true
   }
 
-  deletion_protection = true
+  deletion_protection = false
 
-  depends_on = [google_service_networking_connection.psa]
+  depends_on = [
+    google_service_networking_connection.psa
+  ]
 }
+
+############################################
+# DATABASE
+############################################
 
 resource "google_sql_database" "prod_db" {
+
   name     = "probestack-prod-db"
   instance = google_sql_database_instance.mysql.name
+
 }
 
+############################################
+# DATABASE USER
+############################################
+
 resource "google_sql_user" "admin" {
+
   name     = var.db_user
   password = var.db_password
   instance = google_sql_database_instance.mysql.name
+
 }

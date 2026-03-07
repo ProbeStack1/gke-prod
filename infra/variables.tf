@@ -9,6 +9,10 @@ variable "region" {
   default     = "us-central1"
 }
 
+############################
+# Network
+############################
+
 variable "vpc_name" {
   description = "The name of the VPC network"
   type        = string
@@ -39,10 +43,16 @@ variable "psa_range_name" {
   default     = "google-managed-services-ip-range"
 }
 
+############################
+# GKE Cluster
+############################
+
 variable "cluster_name" {
-  description = "The name of the GKE cluster"
+  description = "Name of the NEW optimized GKE cluster"
   type        = string
-  default     = "secure-prod-cluster"
+
+  # Important: new cluster so Terraform does NOT replace existing one
+  default     = "probestack-cluster"
 }
 
 variable "node_pool_name" {
@@ -51,38 +61,58 @@ variable "node_pool_name" {
   default     = "main-pool"
 }
 
+############################
+# Artifact Registry
+############################
+
 variable "artifact_repo_name" {
   description = "The name of the artifact registry repository"
   type        = string
   default     = "probestack-prod-apps"
 }
 
+############################
+# Ingress Domain
+############################
+
 variable "domain_name" {
-  description = "The domain name for the production ingress (e.g., probestack.io)"
+  description = "Temporary domain for the new cluster during migration"
   type        = string
-  default     = "probestack.io" 
+
+  # Prevents conflict with existing cluster ingress
+  default     = "prod.probestack.io"
 }
+
+############################
+# Cloud SQL
+############################
 
 variable "db_instance_name" {
   description = "The name of the Cloud SQL instance"
   type        = string
+
+  # Must match existing DB so Terraform does NOT recreate it
   default     = "probestack-mysql-prod"
 }
 
 variable "db_tier" {
   description = "The machine type for the Cloud SQL instance"
+
+  # Must match existing production DB
   type        = string
-  default     = "db-custom-2-7680" # 2 vCPU, 7.5 GB RAM (Production baseline)
+  default     = "db-custom-2-7680"
 }
 
 variable "db_user" {
   description = "The database admin username"
   type        = string
-  default     = "admin"
+
+  # Must match existing DB user
+  default     = "probestack_prod_admin"
 }
 
 variable "db_password" {
   description = "The database admin password"
   type        = string
-  sensitive   = true # Hides output in logs
+  sensitive   = true
 }

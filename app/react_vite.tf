@@ -8,7 +8,7 @@ resource "kubernetes_deployment_v1" "react_vite" {
   }
 
   spec {
-    replicas = 2
+    replicas = 1
 
     selector {
       match_labels = {
