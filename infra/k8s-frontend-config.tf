@@ -1,7 +1,3 @@
-############################################
-# PRODUCTION SSL POLICY
-############################################
-
 resource "google_compute_ssl_policy" "prod_ssl_policy" {
   name            = "probestack-prod-ssl-policy"
   profile         = "MODERN"
@@ -11,10 +7,6 @@ resource "google_compute_ssl_policy" "prod_ssl_policy" {
     prevent_destroy = true
   }
 }
-
-############################################
-# GKE FRONTEND CONFIG
-############################################
 
 resource "kubernetes_manifest" "prod_frontend_config" {
 

@@ -116,3 +116,7 @@ variable "db_password" {
   type        = string
   sensitive   = true
 }
+
+variable "node_service_account" {
+  default = "k8s-node-sa"
+}
