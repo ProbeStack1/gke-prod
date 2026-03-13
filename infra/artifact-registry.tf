@@ -14,7 +14,21 @@ resource "google_artifact_registry_repository" "repo" {
   }
 
   ############################################
-  # DELETE OLD IMAGES
+  # KEEP MOST RECENT IMAGES
+  ############################################
+
+  cleanup_policies {
+
+    id     = "keep-recent-images"
+    action = "KEEP"
+
+    most_recent_versions {
+      keep_count = 20
+    }
+  }
+
+  ############################################
+  # DELETE OLD IMAGES (> 2 weeks)
   ############################################
 
   cleanup_policies {
@@ -24,36 +38,22 @@ resource "google_artifact_registry_repository" "repo" {
 
     condition {
       tag_state  = "ANY"
-      older_than = "1209600s"
+      older_than = "14d"
     }
   }
 
   ############################################
-  # DELETE UNTAGGED IMAGES
+  # DELETE UNTAGGED IMAGES (> 3 days)
   ############################################
 
   cleanup_policies {
 
-    id     = "delete-untagged"
+    id     = "delete-untagged-images"
     action = "DELETE"
 
     condition {
       tag_state  = "UNTAGGED"
-      older_than = "259200s"
-    }
-  }
-
-  ############################################
-  # KEEP MOST RECENT IMAGES
-  ############################################
-
-  cleanup_policies {
-
-    id     = "keep-recent"
-    action = "KEEP"
-
-    most_recent_versions {
-      keep_count = 10
+      older_than = "3d"
     }
   }
 }

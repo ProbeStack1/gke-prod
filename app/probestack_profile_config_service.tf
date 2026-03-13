@@ -80,6 +80,16 @@ resource "kubernetes_deployment_v1" "probestack_profile_config_service" {
           }
 
           env {
+            name = "mongodb_config_db"
+            value_from {
+              secret_key_ref {
+                name = "mongodb-secret"
+                key  = "MONGODB_CONFIG_DB"
+              }
+            }
+          }
+
+          env {
             name  = "SPRING_DATASOURCE_USERNAME"
             value = var.cloudsql_user
           }

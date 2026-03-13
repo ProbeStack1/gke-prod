@@ -5,7 +5,7 @@ DEST="us-central1-docker.pkg.dev/probestack-prod/probestack-prod-apps"
 LOCATION="us-central1"
 
 echo "Authenticating docker..."
-gcloud auth configure-docker $LOCATION-docker.pkg.dev --quiet
+gcloud auth configure-docker ${LOCATION}-docker.pkg.dev --quiet
 
 echo "Fetching images + tags..."
 
@@ -13,16 +13,13 @@ gcloud artifacts docker images list $SRC \
   --include-tags \
   --format="value(IMAGE,TAGS)" | while read -r IMAGE TAGS
 do
-  # remove repo prefix
   NAME=${IMAGE#"$SRC/"}
 
-  # TAGS may be comma separated
   IFS=',' read -ra TAG_ARRAY <<< "$TAGS"
 
   for TAG in "${TAG_ARRAY[@]}"; do
     TAG=$(echo "$TAG" | xargs)
 
-    # skip empty tags
     if [[ -z "$TAG" || "$TAG" == "<none>" ]]; then
       continue
     fi

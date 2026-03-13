@@ -107,7 +107,7 @@ resource "kubernetes_ingress_v1" "prod_ingress" {
         }
 
         path {
-          path      = "/config/v1"
+          path      = "/config"
           path_type = "Prefix"
 
           backend {

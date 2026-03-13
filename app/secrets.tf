@@ -21,6 +21,7 @@ resource "kubernetes_secret_v1" "mongodb_secret" {
 
   data = {
     MONGODB_URI = var.mongodb_uri
+    MONGODB_CONFIG_DB = var.mongodb_config_db
   }
 }
 
