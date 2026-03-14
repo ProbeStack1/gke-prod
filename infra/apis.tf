@@ -8,7 +8,8 @@ resource "google_project_service" "services" {
     "iam.googleapis.com",
     "sqladmin.googleapis.com",
     "logging.googleapis.com",
-    "monitoring.googleapis.com"
+    "monitoring.googleapis.com",
+    "sts.googleapis.com"
   ])
 
   service = each.value
