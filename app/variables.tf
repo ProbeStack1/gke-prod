@@ -27,7 +27,7 @@ variable "domain_name" {
 
 variable "react_vite_image" {
   type    = string
-  default = "us-central1-docker.pkg.dev/probestack-prod/probestack-prod-apps/react-vite:1.0"
+  default = "us-central1-docker.pkg.dev/probestack-prod/probestack-prod-apps/react-vite:1384b3b4837460c9109cb8dc66c70ad362b7f517"
 }
 
 variable "react_admin_image" {
@@ -41,12 +41,12 @@ variable "react_admin_image" {
 
 variable "admin_backend_image" {
   type    = string
-  default = "us-central1-docker.pkg.dev/probestack-prod/probestack-prod-apps/admin-backend:5.0"
+  default = "us-central1-docker.pkg.dev/probestack-prod/probestack-prod-apps/admin-backend:bd9ada80b2cab702e447db545fd13a7c75846719"
 }
 
 variable "apigee_cutover_image" {
   type    = string
-  default = "us-central1-docker.pkg.dev/probestack-prod/probestack-prod-apps/probestack-apigee-cutover-service@sha256:c6b50f272b6867bb58eb17c10ea150f87d1dd3a26cc0d7dfb2f99f300e0e062b"
+  default = "us-central1-docker.pkg.dev/probestack-prod/probestack-prod-apps/apigee-cutover:25b75cb8a6e369caeeed7075d6016cf9c19e3e6c"
 }
 
 variable "apigee_edge_mock_service_image" {
@@ -56,7 +56,7 @@ variable "apigee_edge_mock_service_image" {
 
 variable "probestack_apigee_assessment_service_image" {
   type    = string
-  default = "us-central1-docker.pkg.dev/probestack-prod/probestack-prod-apps/probestack-apigee-assessment-service@sha256:7d00126bead78161b6fbd42798e3dff6e2616f39357b81463b9ccd323e614cbf"
+  default = "us-central1-docker.pkg.dev/probestack-prod/probestack-prod-apps/probestack-apigee-assessment-service:d084e4a568cfee056a6b453496aecab8e913de00"
 }
 
 variable "probestack_apigee_deployment_service_image" {
@@ -66,17 +66,17 @@ variable "probestack_apigee_deployment_service_image" {
 
 variable "probestack_apigee_discovery_service_image" {
   type    = string
-  default = "us-central1-docker.pkg.dev/probestack-prod/probestack-prod-apps/probestack-apigee-discovery-service@sha256:7eebbcf0ed34f6d837465a3e86b780b635b28389a167d5353659e181803b114e"
+  default = "us-central1-docker.pkg.dev/probestack-prod/probestack-prod-apps/probestack-apigee-discovery-service:3b39b47195c161f7716456b5e8be2a0e80c030c2"
 }
 
 variable "probestack_apigee_migration_service_image" {
   type    = string
-  default = "us-central1-docker.pkg.dev/probestack-prod/probestack-prod-apps/probestack-apigee-migration-service@sha256:29e3e17ce329d7ea7d77e70fc34ea3d1e3c183c7e07cfbd8ab33fbfc39c10dcc"
+  default = "us-central1-docker.pkg.dev/probestack-prod/probestack-prod-apps/probestack-apigee-migration-service:92693902f69398b4576ae96da1988c7e31f7cc4f"
 }
 
 variable "probestack_profile_config_service_image" {
   type    = string
-  default = "us-central1-docker.pkg.dev/probestack-prod/probestack-prod-apps/probestack-profile-config-service@sha256:8911c021de3ed6c1705b93584dc1668692178528b14c7beca4825fd218515329"
+  default = "us-central1-docker.pkg.dev/probestack-prod/probestack-prod-apps/probestack-profile-config-service:570fa32ca50f53bca5723ba4367b166d6484579b"
 }
 
 ############################
@@ -115,7 +115,7 @@ variable "cloudsql_tier" {
 
 variable "cloudsql_user" {
   type    = string
-  default = "probestack_prod_admin"
+  default = "admin_dashboard"
 }
 
 variable "cloudsql_password" {

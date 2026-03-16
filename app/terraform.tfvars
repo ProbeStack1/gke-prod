@@ -3,8 +3,8 @@ project_id = "probestack-prod"
 domain_name = "prod.probestack.io"
 
 cloudsql_tier     = "db-custom-2-7680"
-cloudsql_user     = "probestack_prod_admin" # Updated: Matches the user created in Infra
-cloudsql_password = "Probeeeeeeek!1"        # Updated: Matches the password used in Infra
+cloudsql_user     = "db_user"
+cloudsql_password = "Forge!crux@1"
 
 mongodb_uri = "mongodb+srv://admin_db_user:HdhPLHmhHEhxSUTa@probestack-prod.mby902c.mongodb.net/probestack-forgeshift?appName=probestack-prod"
 

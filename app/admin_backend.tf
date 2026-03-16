@@ -1,13 +1,16 @@
 resource "kubernetes_deployment_v1" "admin_backend" {
+
   metadata {
     name      = "admin-backend"
     namespace = "secure-production-app"
+
     labels = {
       app = "admin-backend"
     }
   }
 
   spec {
+
     replicas = 1
 
     selector {
@@ -17,6 +20,7 @@ resource "kubernetes_deployment_v1" "admin_backend" {
     }
 
     template {
+
       metadata {
         labels = {
           app = "admin-backend"
@@ -24,6 +28,13 @@ resource "kubernetes_deployment_v1" "admin_backend" {
       }
 
       spec {
+
+        ############################################
+        # WORKLOAD IDENTITY SERVICE ACCOUNT
+        ############################################
+
+        service_account_name = kubernetes_service_account.admin_backend_ksa.metadata[0].name
+
         security_context {
           run_as_non_root = true
           run_as_user     = 1001
@@ -34,7 +45,12 @@ resource "kubernetes_deployment_v1" "admin_backend" {
           }
         }
 
+        ############################################
+        # FASTAPI BACKEND CONTAINER
+        ############################################
+
         container {
+
           name  = "admin-backend"
           image = var.admin_backend_image
 
@@ -42,7 +58,6 @@ resource "kubernetes_deployment_v1" "admin_backend" {
             container_port = 8080
           }
 
-          # REQUIRED for PodSecurity restricted
           security_context {
             run_as_non_root            = true
             run_as_user                = 1001
@@ -59,6 +74,7 @@ resource "kubernetes_deployment_v1" "admin_backend" {
               cpu    = "50m"
               memory = "128Mi"
             }
+
             limits = {
               cpu    = "500m"
               memory = "512Mi"
@@ -70,18 +86,27 @@ resource "kubernetes_deployment_v1" "admin_backend" {
               path = "/api"
               port = 8080
             }
+
             initial_delay_seconds = 10
             period_seconds        = 5
           }
+
+          ############################################
+          # ENV VARIABLES
+          ############################################
 
           env {
             name  = "ROOT_PATH"
             value = "/admin-backend"
           }
 
+          ############################################
+          # MYSQL DATABASE CONFIG
+          ############################################
+
           env {
             name  = "DB_NAME"
-            value = "probestack-prod-db"
+            value = "admin_dashboard"
           }
 
           env {
@@ -91,6 +116,7 @@ resource "kubernetes_deployment_v1" "admin_backend" {
 
           env {
             name = "DB_PASSWORD"
+
             value_from {
               secret_key_ref {
                 name = "cloudsql-db-secret"
@@ -104,8 +130,13 @@ resource "kubernetes_deployment_v1" "admin_backend" {
             value = "${var.project_id}:${var.region}:probestack-mysql-prod"
           }
 
+          ############################################
+          # MONGODB
+          ############################################
+
           env {
             name = "MONGODB_URI"
+
             value_from {
               secret_key_ref {
                 name = "mongodb-secret"
@@ -113,6 +144,10 @@ resource "kubernetes_deployment_v1" "admin_backend" {
               }
             }
           }
+
+          ############################################
+          # AUTH0
+          ############################################
 
           env {
             name  = "AUTH0_DOMAIN"
@@ -129,14 +164,71 @@ resource "kubernetes_deployment_v1" "admin_backend" {
             value = "https://${var.domain_name}/callback"
           }
 
+          ############################################
+          # VOLUME MOUNTS
+          ############################################
+
           volume_mount {
             name       = "tmp"
             mount_path = "/tmp"
           }
+
+          volume_mount {
+            name       = "cloudsql"
+            mount_path = "/cloudsql"
+          }
         }
+
+        ############################################
+        # CLOUD SQL PROXY SIDECAR
+        ############################################
+
+        container {
+
+          name  = "cloud-sql-proxy"
+          image = "gcr.io/cloud-sql-connectors/cloud-sql-proxy:2.11.0"
+
+          args = [
+            "--structured-logs",
+            "--unix-socket=/cloudsql",
+            "${var.project_id}:${var.region}:probestack-mysql-prod"
+          ]
+
+          security_context {
+            run_as_non_root            = true
+            allow_privilege_escalation = false
+
+            capabilities {
+              drop = ["ALL"]
+            }
+          }
+
+          resources {
+            requests = {
+              cpu    = "50m"
+              memory = "64Mi"
+            }
+          }
+
+          volume_mount {
+            name       = "cloudsql"
+            mount_path = "/cloudsql"
+          }
+        }
+
+        ############################################
+        # VOLUMES
+        ############################################
 
         volume {
           name = "tmp"
+
+          empty_dir {}
+        }
+
+        volume {
+          name = "cloudsql"
+
           empty_dir {}
         }
       }
@@ -144,7 +236,12 @@ resource "kubernetes_deployment_v1" "admin_backend" {
   }
 }
 
+############################################
+# BACKEND CONFIG
+############################################
+
 resource "kubectl_manifest" "admin_backend_config" {
+
   yaml_body = <<YAML
 apiVersion: cloud.google.com/v1
 kind: BackendConfig
@@ -160,7 +257,12 @@ spec:
 YAML
 }
 
+############################################
+# SERVICE
+############################################
+
 resource "kubernetes_service_v1" "admin_backend" {
+
   metadata {
     name      = "admin-backend"
     namespace = "secure-production-app"
@@ -176,6 +278,7 @@ resource "kubernetes_service_v1" "admin_backend" {
   }
 
   spec {
+
     selector = {
       app = "admin-backend"
     }
