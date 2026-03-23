@@ -56,7 +56,7 @@ resource "kubernetes_deployment_v1" "forgeq_workspace_mgmt_service" {
           # 🔹 IMPORTANT: Context path
           env {
             name  = "SERVER_SERVLET_CONTEXT_PATH"
-            value = "/api/v1/workspaces"
+            value = "/"
           }
 
           env {
@@ -82,7 +82,7 @@ resource "kubernetes_deployment_v1" "forgeq_workspace_mgmt_service" {
 
           readiness_probe {
             http_get {
-              path = "/api/v1/workspaces/actuator/health"
+              path = "/actuator/health"
               port = 8080
             }
             initial_delay_seconds = 30
@@ -91,7 +91,7 @@ resource "kubernetes_deployment_v1" "forgeq_workspace_mgmt_service" {
 
           liveness_probe {
             http_get {
-              path = "/api/v1/workspaces/actuator/health"
+              path = "/actuator/health"
               port = 8080
             }
             initial_delay_seconds = 60
