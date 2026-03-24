@@ -1,3 +1,7 @@
+############################################
+# CORE PROJECT SETTINGS
+############################################
+
 variable "project_id" {
   description = "The Google Cloud Project ID"
   type        = string
@@ -9,9 +13,15 @@ variable "region" {
   default     = "us-central1"
 }
 
-############################
-# Network
-############################
+variable "environment" {
+  description = "Deployment environment"
+  type        = string
+  default     = "prod"
+}
+
+############################################
+# NETWORK
+############################################
 
 variable "vpc_name" {
   description = "The name of the VPC network"
@@ -43,16 +53,14 @@ variable "psa_range_name" {
   default     = "google-managed-services-ip-range"
 }
 
-############################
-# GKE Cluster
-############################
+############################################
+# GKE CLUSTER
+############################################
 
 variable "cluster_name" {
-  description = "Name of the NEW optimized GKE cluster"
+  description = "Name of the GKE cluster"
   type        = string
-
-  # Important: new cluster so Terraform does NOT replace existing one
-  default     = "probestack-cluster"
+  default     = "probestack-zonal-cluster"
 }
 
 variable "node_pool_name" {
@@ -61,9 +69,15 @@ variable "node_pool_name" {
   default     = "main-pool"
 }
 
-############################
-# Artifact Registry
-############################
+variable "node_service_account" {
+  description = "Service account name for GKE nodes"
+  type        = string
+  default     = "k8s-node-sa"
+}
+
+############################################
+# ARTIFACT REGISTRY
+############################################
 
 variable "artifact_repo_name" {
   description = "The name of the artifact registry repository"
@@ -71,34 +85,40 @@ variable "artifact_repo_name" {
   default     = "probestack-prod-apps"
 }
 
-############################
-# Ingress Domain
-############################
+############################################
+# INGRESS DOMAINS (MULTI-NAMESPACE)
+############################################
 
 variable "domain_name" {
-  description = "Temporary domain for the new cluster during migration"
+  description = "Primary production domain"
   type        = string
-
-  # Prevents conflict with existing cluster ingress
   default     = "prod.probestack.io"
 }
 
-############################
-# Cloud SQL
-############################
+variable "forgeq_domain" {
+  description = "Domain for forgeq namespace"
+  type        = string
+  default     = "prod.forgeq.probestack.io"
+}
+
+variable "forgeshift_domain" {
+  description = "Domain for forgeshift namespace"
+  type        = string
+  default     = "forgeshift.probestack.io"
+}
+
+############################################
+# CLOUD SQL
+############################################
 
 variable "db_instance_name" {
   description = "The name of the Cloud SQL instance"
   type        = string
-
-  # Must match existing DB so Terraform does NOT recreate it
   default     = "probestack-mysql-prod"
 }
 
 variable "db_tier" {
   description = "The machine type for the Cloud SQL instance"
-
-  # Must match existing production DB
   type        = string
   default     = "db-custom-2-7680"
 }
@@ -106,8 +126,6 @@ variable "db_tier" {
 variable "db_user" {
   description = "The database admin username"
   type        = string
-
-  # Must match existing DB user
   default     = "probestack_prod_admin"
 }
 
@@ -115,8 +133,9 @@ variable "db_password" {
   description = "The database admin password"
   type        = string
   sensitive   = true
-}
 
-variable "node_service_account" {
-  default = "k8s-node-sa"
+  validation {
+    condition     = length(var.db_password) >= 12
+    error_message = "DB password must be at least 12 characters long."
+  }
 }

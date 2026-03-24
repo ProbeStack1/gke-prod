@@ -20,7 +20,7 @@ resource "kubernetes_secret_v1" "mongodb_secret" {
   type = "Opaque"
 
   data = {
-    MONGODB_URI = var.mongodb_uri
+    MONGODB_URI       = var.mongodb_uri
     MONGODB_CONFIG_DB = var.mongodb_config_db
   }
 }
@@ -29,6 +29,49 @@ resource "kubernetes_secret_v1" "auth0_secret" {
   metadata {
     name      = "auth0-secret"
     namespace = "secure-production-app"
+  }
+
+  type = "Opaque"
+
+  data = {
+    client_secret = var.auth0_client_secret
+  }
+}
+############################################
+# NEW: ForgeQ Secrets (IDENTICAL COPY)
+############################################
+
+resource "kubernetes_secret_v1" "cloudsql_db_secret_forgeq" {
+  metadata {
+    name      = "cloudsql-db-secret"
+    namespace = "forgeq-prod"
+  }
+
+  type = "Opaque"
+
+  data = {
+    password = var.cloudsql_password
+  }
+}
+
+resource "kubernetes_secret_v1" "mongodb_secret_forgeq" {
+  metadata {
+    name      = "mongodb-secret"
+    namespace = "forgeq-prod"
+  }
+
+  type = "Opaque"
+
+  data = {
+    MONGODB_URI       = var.mongodb_uri
+    MONGODB_CONFIG_DB = var.mongodb_config_db
+  }
+}
+
+resource "kubernetes_secret_v1" "auth0_secret_forgeq" {
+  metadata {
+    name      = "auth0-secret"
+    namespace = "forgeq-prod"
   }
 
   type = "Opaque"

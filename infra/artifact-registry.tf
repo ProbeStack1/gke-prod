@@ -28,7 +28,7 @@ resource "google_artifact_registry_repository" "repo" {
   }
 
   ############################################
-  # DELETE OLD IMAGES (> 2 weeks)
+  # DELETE OLD IMAGES (> 14 days)
   ############################################
 
   cleanup_policies {
@@ -38,7 +38,7 @@ resource "google_artifact_registry_repository" "repo" {
 
     condition {
       tag_state  = "ANY"
-      older_than = "14d"
+      older_than = "1209600s" # 14 days
     }
   }
 
@@ -53,7 +53,7 @@ resource "google_artifact_registry_repository" "repo" {
 
     condition {
       tag_state  = "UNTAGGED"
-      older_than = "3d"
+      older_than = "259200s" # 3 days
     }
   }
 }

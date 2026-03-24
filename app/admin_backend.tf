@@ -29,10 +29,6 @@ resource "kubernetes_deployment_v1" "admin_backend" {
 
       spec {
 
-        ############################################
-        # WORKLOAD IDENTITY SERVICE ACCOUNT
-        ############################################
-
         service_account_name = kubernetes_service_account.admin_backend_ksa.metadata[0].name
 
         security_context {
@@ -44,10 +40,6 @@ resource "kubernetes_deployment_v1" "admin_backend" {
             type = "RuntimeDefault"
           }
         }
-
-        ############################################
-        # FASTAPI BACKEND CONTAINER
-        ############################################
 
         container {
 
@@ -91,18 +83,10 @@ resource "kubernetes_deployment_v1" "admin_backend" {
             period_seconds        = 5
           }
 
-          ############################################
-          # ENV VARIABLES
-          ############################################
-
           env {
             name  = "ROOT_PATH"
             value = "/admin-backend"
           }
-
-          ############################################
-          # MYSQL DATABASE CONFIG
-          ############################################
 
           env {
             name  = "DB_NAME"
@@ -130,10 +114,6 @@ resource "kubernetes_deployment_v1" "admin_backend" {
             value = "${var.project_id}:${var.region}:probestack-mysql-prod"
           }
 
-          ############################################
-          # MONGODB
-          ############################################
-
           env {
             name = "MONGODB_URI"
 
@@ -144,10 +124,6 @@ resource "kubernetes_deployment_v1" "admin_backend" {
               }
             }
           }
-
-          ############################################
-          # AUTH0
-          ############################################
 
           env {
             name  = "AUTH0_DOMAIN"
@@ -164,10 +140,6 @@ resource "kubernetes_deployment_v1" "admin_backend" {
             value = "https://${var.domain_name}/callback"
           }
 
-          ############################################
-          # VOLUME MOUNTS
-          ############################################
-
           volume_mount {
             name       = "tmp"
             mount_path = "/tmp"
@@ -178,10 +150,6 @@ resource "kubernetes_deployment_v1" "admin_backend" {
             mount_path = "/cloudsql"
           }
         }
-
-        ############################################
-        # CLOUD SQL PROXY SIDECAR
-        ############################################
 
         container {
 
@@ -216,10 +184,6 @@ resource "kubernetes_deployment_v1" "admin_backend" {
           }
         }
 
-        ############################################
-        # VOLUMES
-        ############################################
-
         volume {
           name = "tmp"
 
@@ -235,10 +199,6 @@ resource "kubernetes_deployment_v1" "admin_backend" {
     }
   }
 }
-
-############################################
-# BACKEND CONFIG
-############################################
 
 resource "kubectl_manifest" "admin_backend_config" {
 
@@ -256,10 +216,6 @@ spec:
     pathPrefixRewrite: /
 YAML
 }
-
-############################################
-# SERVICE
-############################################
 
 resource "kubernetes_service_v1" "admin_backend" {
 
