@@ -1,10 +1,10 @@
-resource "kubernetes_deployment_v1" "fq_workspace_mgmt_svc" {
+resource "kubernetes_deployment_v1" "fq_dashboard_mgmt_svc" {
   metadata {
-    name      = "fq-workspace-mgmt-svc"
+    name      = "fq-dashboard-mgmt-svc"
     namespace = "forgeq-prod"
 
     labels = {
-      app = "fq-workspace-mgmt-svc"
+      app = "fq-dashboard-mgmt-svc"
     }
   }
 
@@ -13,14 +13,14 @@ resource "kubernetes_deployment_v1" "fq_workspace_mgmt_svc" {
 
     selector {
       match_labels = {
-        app = "fq-workspace-mgmt-svc"
+        app = "fq-dashboard-mgmt-svc"
       }
     }
 
     template {
       metadata {
         labels = {
-          app = "fq-workspace-mgmt-svc"
+          app = "fq-dashboard-mgmt-svc"
         }
       }
 
@@ -36,8 +36,8 @@ resource "kubernetes_deployment_v1" "fq_workspace_mgmt_svc" {
         }
 
         container {
-          name  = "fq-workspace-mgmt-svc"
-          image = var.fq_workspace_mgmt_svc_image
+          name  = "fq-dashboard-mgmt-svc"
+          image = var.fq_dashboard_mgmt_svc_image
 
           port {
             container_port = 8080
@@ -56,7 +56,7 @@ resource "kubernetes_deployment_v1" "fq_workspace_mgmt_svc" {
 
           env {
             name  = "SERVER_SERVLET_CONTEXT_PATH"
-            value = "/api/v1/workspaces"
+            value = "/api/v1/dashboard"
           }
 
           env {
@@ -119,7 +119,7 @@ resource "kubernetes_deployment_v1" "fq_workspace_mgmt_svc" {
 
           readiness_probe {
             http_get {
-              path = "/api/v1/workspaces/actuator/health"
+              path = "/api/v1/dashboard/actuator/health"
               port = 8080
             }
             initial_delay_seconds = 30
@@ -153,41 +153,41 @@ resource "kubernetes_deployment_v1" "fq_workspace_mgmt_svc" {
   }
 }
 
-resource "kubectl_manifest" "fq_workspace_mgmt_backend" {
+resource "kubectl_manifest" "fq_dashboard_mgmt_backend" {
   yaml_body = <<YAML
 apiVersion: cloud.google.com/v1
 kind: BackendConfig
 metadata:
-  name: fq-workspace-mgmt-backend
+  name: fq-dashboard-mgmt-backend
   namespace: forgeq-prod
 spec:
   healthCheck:
-    requestPath: /api/v1/workspaces/actuator/health
+    requestPath: /api/v1/dashboard/actuator/health
     port: 8080
     type: HTTP
 YAML
 }
 
-resource "kubernetes_service_v1" "fq_workspace_mgmt_svc" {
+resource "kubernetes_service_v1" "fq_dashboard_mgmt_svc" {
   metadata {
-    name      = "fq-workspace-mgmt-svc"
+    name      = "fq-dashboard-mgmt-svc"
     namespace = "forgeq-prod"
 
     annotations = {
       "cloud.google.com/neg" = "{\"ingress\": true}"
       "cloud.google.com/backend-config" = jsonencode({
-        default = "fq-workspace-mgmt-backend"
+        default = "fq-dashboard-mgmt-backend"
       })
     }
 
     labels = {
-      app = "fq-workspace-mgmt-svc"
+      app = "fq-dashboard-mgmt-svc"
     }
   }
 
   spec {
     selector = {
-      app = "fq-workspace-mgmt-svc"
+      app = "fq-dashboard-mgmt-svc"
     }
 
     port {

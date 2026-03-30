@@ -156,6 +156,7 @@ metadata:
   name: apigee-edge-mock-service-backend-config
   namespace: secure-production-app
 spec:
+  timeoutSec: 300
   healthCheck:
     requestPath: /v1/actuator/health
     port: 8080

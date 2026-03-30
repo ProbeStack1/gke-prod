@@ -165,6 +165,7 @@ metadata:
   name: apigee-cutover-backend-config
   namespace: secure-production-app
 spec:
+  timeoutSec: 300
   healthCheck:
     requestPath: /cutover/v1/actuator/health
     type: HTTP

@@ -157,6 +157,7 @@ metadata:
   name: probestack-apigee-discovery-service-backend-config
   namespace: secure-production-app
 spec:
+  timeoutSec: 300
   healthCheck:
     requestPath: /discovery/v1/actuator/health
     port: 8080

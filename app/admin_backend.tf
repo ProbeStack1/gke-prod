@@ -75,7 +75,7 @@ resource "kubernetes_deployment_v1" "admin_backend" {
 
           readiness_probe {
             http_get {
-              path = "/api"
+              path = "/admin-backend/api/health"
               port = 8080
             }
 
@@ -158,6 +158,7 @@ resource "kubernetes_deployment_v1" "admin_backend" {
 
           args = [
             "--structured-logs",
+            "--private-ip",
             "--unix-socket=/cloudsql",
             "${var.project_id}:${var.region}:probestack-mysql-prod"
           ]

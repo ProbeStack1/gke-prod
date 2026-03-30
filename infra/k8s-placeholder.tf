@@ -1,17 +1,14 @@
-############################################
-# COMMON LOCALS (ONLY NEW NAMESPACES)
-############################################
+# COMMON LOCALS
 
 locals {
   new_namespaces = {
     forgeq     = kubernetes_namespace.forgeq.metadata[0].name
+    forgestudio     = kubernetes_namespace.forgestudio.metadata[0].name
     forgeshift = kubernetes_namespace.forgeshift.metadata[0].name
   }
 }
 
-############################################
-# EXISTING PRODUCTION PLACEHOLDER (UNCHANGED 🔒)
-############################################
+# EXISTING PRODUCTION PLACEHOLDER
 
 resource "kubernetes_deployment" "placeholder_prod" {
 
@@ -150,9 +147,7 @@ resource "kubernetes_service" "placeholder_prod" {
   }
 }
 
-############################################
-# NEW PLACEHOLDERS (EXACT COPY ✅)
-############################################
+# NEW PLACEHOLDERS
 
 resource "kubernetes_deployment" "placeholder" {
 

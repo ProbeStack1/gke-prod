@@ -1,7 +1,3 @@
-############################################
-# ========== PRODUCTION ====================
-############################################
-
 resource "google_compute_global_address" "prod_ip" {
   name        = "probestack-prod-ingress-ip"
   description = "Static IP for Production Ingress"
@@ -248,10 +244,6 @@ resource "kubernetes_ingress_v1" "forgeq_ingress" {
 
       http {
 
-        ############################################
-        #  ALL API SERVICES (MOST SPECIFIC FIRST)
-        ############################################
-
         path {
           path      = "/api/v1/users"
           path_type = "Prefix"
@@ -373,9 +365,60 @@ resource "kubernetes_ingress_v1" "forgeq_ingress" {
           }
         }
 
-        ############################################
-        # ⚠️ ALWAYS LAST (CATCH-ALL)
-        ############################################
+        path {
+          path      = "/api/v1/support"
+          path_type = "Prefix"
+          backend {
+            service {
+              name = "fq-support-mgmt-svc"
+              port { number = 80 }
+            }
+          }
+        }
+
+        path {
+          path      = "/api/v1/settings"
+          path_type = "Prefix"
+          backend {
+            service {
+              name = "fq-setting-mgmt-svc"
+              port { number = 80 }
+            }
+          }
+        }
+
+        path {
+          path      = "/api/v1/testfiles"
+          path_type = "Prefix"
+          backend {
+            service {
+              name = "fq-testfile-mgmt-svc"
+              port { number = 80 }
+            }
+          }
+        }
+
+        path {
+          path      = "/api/v1/testspecs"
+          path_type = "Prefix"
+          backend {
+            service {
+              name = "fq-testspec-mgmt-svc"
+              port { number = 80 }
+            }
+          }
+        }
+
+        path {
+          path      = "/api/v1/dashboard"
+          path_type = "Prefix"
+          backend {
+            service {
+              name = "fq-dashboard-mgmt-svc"
+              port { number = 80 }
+            }
+          }
+        }
 
         path {
           path      = "/"
@@ -390,10 +433,6 @@ resource "kubernetes_ingress_v1" "forgeq_ingress" {
       }
     }
 
-    ############################################
-    # DEFAULT BACKEND
-    ############################################
-
     default_backend {
       service {
         name = "forgeq-fe"
@@ -403,9 +442,79 @@ resource "kubernetes_ingress_v1" "forgeq_ingress" {
   }
 }
 
-############################################
-# ========== FORGESHIFT ====================
-############################################
+resource "google_compute_global_address" "forgestudio_ip" {
+  name = "forgestudio-ingress-ip"
+
+  lifecycle {
+    prevent_destroy = true
+  }
+}
+
+resource "kubernetes_manifest" "forgestudio_cert_v2" {
+  manifest = {
+    apiVersion = "networking.gke.io/v1"
+    kind       = "ManagedCertificate"
+
+    metadata = {
+      name      = "forgestudio-cert-v2"
+      namespace = "forgestudio-prod"
+    }
+
+    spec = {
+      domains = ["prod.forgestudio.probestack.io"] 
+    }
+  }
+}
+
+resource "kubernetes_ingress_v1" "forgestudio_ingress" {
+
+  depends_on = [
+    kubernetes_manifest.forgestudio_cert_v2,
+    kubernetes_manifest.forgestudio_frontend_config,
+    google_compute_global_address.forgestudio_ip
+  ]
+
+  metadata {
+    name      = "forgestudio-ingress"
+    namespace = kubernetes_namespace.forgestudio.metadata[0].name
+
+    annotations = {
+      "kubernetes.io/ingress.class"                 = "gce"
+      "kubernetes.io/ingress.global-static-ip-name" = google_compute_global_address.forgestudio_ip.name
+      "networking.gke.io/managed-certificates"      = "forgestudio-cert-v2"
+      "networking.gke.io/frontend-config"           = "forgestudio-frontend-config"
+      "kubernetes.io/ingress.allow-http"            = "true"
+    }
+  }
+
+  spec {
+    rule {
+      host = var.forgestudio_domain
+
+      http {
+
+
+        path {
+          path      = "/"
+          path_type = "Prefix"
+          backend {
+            service {
+              name = "forgestudio-fe"
+              port { number = 80 }
+            }
+          }
+        }
+      }
+    }
+
+    default_backend {
+      service {
+        name = "forgestudio-fe"
+        port { number = 80 }
+      }
+    }
+  }
+}
 
 resource "google_compute_global_address" "forgeshift_ip" {
   name = "forgeshift-ingress-ip"

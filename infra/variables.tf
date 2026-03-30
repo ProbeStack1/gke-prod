@@ -1,6 +1,4 @@
-############################################
 # CORE PROJECT SETTINGS
-############################################
 
 variable "project_id" {
   description = "The Google Cloud Project ID"
@@ -19,9 +17,7 @@ variable "environment" {
   default     = "prod"
 }
 
-############################################
 # NETWORK
-############################################
 
 variable "vpc_name" {
   description = "The name of the VPC network"
@@ -53,9 +49,7 @@ variable "psa_range_name" {
   default     = "google-managed-services-ip-range"
 }
 
-############################################
 # GKE CLUSTER
-############################################
 
 variable "cluster_name" {
   description = "Name of the GKE cluster"
@@ -75,9 +69,7 @@ variable "node_service_account" {
   default     = "k8s-node-sa"
 }
 
-############################################
 # ARTIFACT REGISTRY
-############################################
 
 variable "artifact_repo_name" {
   description = "The name of the artifact registry repository"
@@ -85,9 +77,7 @@ variable "artifact_repo_name" {
   default     = "probestack-prod-apps"
 }
 
-############################################
-# INGRESS DOMAINS (MULTI-NAMESPACE)
-############################################
+# INGRESS DOMAINS
 
 variable "domain_name" {
   description = "Primary production domain"
@@ -101,15 +91,19 @@ variable "forgeq_domain" {
   default     = "prod.forgeq.probestack.io"
 }
 
+variable "forgestudio_domain" {
+  description = "Domain for forgestudio namespace"
+  type        = string
+  default     = "prod.forgestudio.probestack.io"
+}
+
 variable "forgeshift_domain" {
   description = "Domain for forgeshift namespace"
   type        = string
   default     = "forgeshift.probestack.io"
 }
 
-############################################
 # CLOUD SQL
-############################################
 
 variable "db_instance_name" {
   description = "The name of the Cloud SQL instance"

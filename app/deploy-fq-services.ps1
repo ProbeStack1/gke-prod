@@ -19,17 +19,11 @@ function Deploy-Service {
 }
 
 $services = @(
-    "fq_user_mgmt_svc",
-    "fq_request_mgmt_svc",
-    "fq_collection_mgmt_svc",
-    "fq_workspace_mgmt_svc",
-    "fq_monitor_mgmt_svc",
-    "fq_mock_mgmt_svc",
-    "fq_webhooks_mgmt_svc",
-    "fq_environment_mgmt_svc",
-    "fq_activity_mgmt_svc",
-    "fq_documentation_mgmt_svc",
-    "fq_collaboration_mgmt_svc"
+    "fq_support_mgmt_svc",
+    "fq_setting_mgmt_svc",
+    "fq_testfile_mgmt_svc",
+    "fq_testspec_mgmt_svc",
+    "fq_dashboard_mgmt_svc"
 )
 
 foreach ($svc in $services) {

@@ -1,6 +1,4 @@
-############################################
-# SSL POLICY (SHARED)
-############################################
+# SSL POLICY
 
 resource "google_compute_ssl_policy" "prod_ssl_policy" {
   name            = "probestack-prod-ssl-policy"
@@ -12,9 +10,7 @@ resource "google_compute_ssl_policy" "prod_ssl_policy" {
   }
 }
 
-############################################
-# WAIT FOR GKE (CRD AVAILABILITY FIX)
-############################################
+# WAIT FOR GKE
 
 resource "time_sleep" "wait_for_gke" {
   depends_on = [
@@ -25,9 +21,7 @@ resource "time_sleep" "wait_for_gke" {
   create_duration = "60s"
 }
 
-############################################
 # PRODUCTION FRONTEND CONFIG
-############################################
 
 resource "kubernetes_manifest" "prod_frontend_config" {
 
@@ -74,9 +68,29 @@ resource "kubernetes_manifest" "forgeq_frontend_config" {
   }
 }
 
-############################################
+resource "kubernetes_manifest" "forgestudio_frontend_config" {
+
+  depends_on = [
+    time_sleep.wait_for_gke,
+    kubernetes_namespace.forgestudio
+  ]
+
+  manifest = {
+    apiVersion = "networking.gke.io/v1beta1"
+    kind       = "FrontendConfig"
+
+    metadata = {
+      name      = "forgestudio-frontend-config"
+      namespace = kubernetes_namespace.forgestudio.metadata[0].name
+    }
+
+    spec = {
+      sslPolicy = google_compute_ssl_policy.prod_ssl_policy.name
+    }
+  }
+}
+
 # FORGESHIFT FRONTEND CONFIG
-############################################
 
 resource "kubernetes_manifest" "forgeshift_frontend_config" {
 
