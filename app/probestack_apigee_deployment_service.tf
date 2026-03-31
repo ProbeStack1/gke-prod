@@ -166,6 +166,7 @@ metadata:
   name: probestack-apigee-deployment-service-backend-config
   namespace: secure-production-app
 spec:
+  timeoutSec: 300
   healthCheck:
     requestPath: /deployments/v1/actuator/health
     port: 8080

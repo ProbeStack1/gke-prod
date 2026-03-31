@@ -157,6 +157,7 @@ metadata:
   name: probestack-profile-config-service-backend-config
   namespace: secure-production-app
 spec:
+  timeoutSec: 300
   healthCheck:
     requestPath: /config/v1/actuator/health
     port: 8080

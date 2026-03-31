@@ -21,10 +21,6 @@ variable "domain_name" {
   default     = "prod.probestack.io"
 }
 
-############################
-# Frontend Images
-############################
-
 variable "react_vite_image" {
   type    = string
   default = "us-central1-docker.pkg.dev/probestack-prod/probestack-prod-apps/react-vite:1384b3b4837460c9109cb8dc66c70ad362b7f517"
@@ -39,10 +35,6 @@ variable "api_code_generator_ui_image" {
   type    = string
   default = "us-central1-docker.pkg.dev/probestack-prod/probestack-prod-apps/api-code-generator-ui@sha256:e466d776750789a614255efb550645beef11c97611add6cdef5af25322857dc4"
 }
-
-############################
-# Backend APIs
-############################
 
 variable "admin_backend_image" {
   type    = string
@@ -84,18 +76,10 @@ variable "probestack_profile_config_service_image" {
   default = "us-central1-docker.pkg.dev/probestack-prod/probestack-prod-apps/probestack-profile-config-service:570fa32ca50f53bca5723ba4367b166d6484579b"
 }
 
-############################
-# ForgeQ Services
-############################
-
 variable "forgeq_fe_image" {
   type    = string
   default = "us-central1-docker.pkg.dev/probestack-prod/probestack-prod-apps/forgeq-fe@sha256:43ec306249e1c92e951973157de93d51694340bdebb9b45ff51e6dfbe432e9b2"
 }
-
-############################
-# ForgeQ Microservices Images (fq-aligned)
-############################
 
 variable "fq_user_mgmt_svc_image" {
   description = "Docker image for fq-user-mgmt-svc"
@@ -163,9 +147,40 @@ variable "fq_collaboration_mgmt_svc_image" {
   default     = "us-central1-docker.pkg.dev/probestack-prod/probestack-prod-apps/fq-collection-mgmt-svc@sha256:331288d6401cc18f95388b0692edd4282c022179be362ac91f646d547b3f008b"
 }
 
-############################
-# CloudSQL
-############################
+variable "fq_support_mgmt_svc_image" {
+  description = "Docker image for fq-support-mgmt-svc"
+  type        = string
+  default     = "us-central1-docker.pkg.dev/probestack-prod/probestack-prod-apps/fq-support-mgmt-svc:4435d6fd4285dfcabc50e5966837c5f558424883"
+}
+
+variable "fq_setting_mgmt_svc_image" {
+  description = "Docker image for fq-setting-mgmt-svc"
+  type        = string
+  default     = "us-central1-docker.pkg.dev/probestack-prod/probestack-prod-apps/fq-setting-mgmt-svc:d3a5eb4ef9a2615ee5a514fb73028c66fa875a18"
+}
+
+variable "fq_testfile_mgmt_svc_image" {
+  description = "Docker image for fq-testfile-mgmt-svc"
+  type        = string
+  default     = "us-central1-docker.pkg.dev/probestack-prod/probestack-prod-apps/fq-testfile-mgmt-svc:a9dbbc90bca47c8abfae41070a495d1ee494afc2"
+}
+
+variable "fq_testspec_mgmt_svc_image" {
+  description = "Docker image for fq-testspec-mgmt-svc"
+  type        = string
+  default     = "us-central1-docker.pkg.dev/probestack-prod/probestack-prod-apps/fq-testspec-mgmt-svc@sha256:88827c893da4373aa157926a5e3f05672ea18fb53b6ec7efb057c5973711fdbe"
+}
+
+variable "fq_dashboard_mgmt_svc_image" {
+  description = "Docker image for fq-dashboard-mgmt-svc"
+  type        = string
+  default     = "us-central1-docker.pkg.dev/probestack-prod/probestack-prod-apps/fq-dashboard-mgmt-svc:e30a7ad04876f61c8fc34d40d81485ce8224c438"
+}
+
+variable "forgestudio_fe_image" {
+  type    = string
+  default = "us-central1-docker.pkg.dev/probestack-prod/probestack-prod-apps/forgeq-fe@sha256:43ec306249e1c92e951973157de93d51694340bdebb9b45ff51e6dfbe432e9b2"
+}
 
 variable "cloudsql_tier" {
   description = "Cloud SQL instance tier"
@@ -182,10 +197,6 @@ variable "cloudsql_password" {
   type      = string
   sensitive = true
 }
-
-############################
-# External Services
-############################
 
 variable "mongodb_uri" {
   type      = string

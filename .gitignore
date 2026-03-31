@@ -3,3 +3,4 @@
 *.tfstate.*
 crash.log
 .vscode/
+app/key.json

@@ -1,9 +1,10 @@
-resource "kubernetes_deployment_v1" "probestack_apigee_migration_service" {
+resource "kubernetes_deployment_v1" "fq_testspec_mgmt_svc" {
   metadata {
-    name      = "probestack-apigee-migration-service"
-    namespace = "secure-production-app"
+    name      = "fq-testspec-mgmt-svc"
+    namespace = "forgeq-prod"
+
     labels = {
-      app = "probestack-apigee-migration-service"
+      app = "fq-testspec-mgmt-svc"
     }
   }
 
@@ -12,19 +13,18 @@ resource "kubernetes_deployment_v1" "probestack_apigee_migration_service" {
 
     selector {
       match_labels = {
-        app = "probestack-apigee-migration-service"
+        app = "fq-testspec-mgmt-svc"
       }
     }
 
     template {
       metadata {
         labels = {
-          app = "probestack-apigee-migration-service"
+          app = "fq-testspec-mgmt-svc"
         }
       }
 
       spec {
-        # POD security context
         security_context {
           run_as_non_root = true
           run_as_user     = 1001
@@ -36,8 +36,8 @@ resource "kubernetes_deployment_v1" "probestack_apigee_migration_service" {
         }
 
         container {
-          name  = "probestack-apigee-migration-service"
-          image = var.probestack_apigee_migration_service_image
+          name  = "fq-testspec-mgmt-svc"
+          image = var.fq_testspec_mgmt_svc_image
 
           port {
             container_port = 8080
@@ -56,7 +56,7 @@ resource "kubernetes_deployment_v1" "probestack_apigee_migration_service" {
 
           env {
             name  = "SERVER_SERVLET_CONTEXT_PATH"
-            value = "/migration/v1"
+            value = "/api/v1/testspecs"
           }
 
           env {
@@ -71,6 +71,7 @@ resource "kubernetes_deployment_v1" "probestack_apigee_migration_service" {
 
           env {
             name = "MONGODB_URI"
+
             value_from {
               secret_key_ref {
                 name = "mongodb-secret"
@@ -81,6 +82,7 @@ resource "kubernetes_deployment_v1" "probestack_apigee_migration_service" {
 
           env {
             name = "mongodb_config_db"
+
             value_from {
               secret_key_ref {
                 name = "mongodb-secret"
@@ -96,6 +98,7 @@ resource "kubernetes_deployment_v1" "probestack_apigee_migration_service" {
 
           env {
             name = "SPRING_DATASOURCE_PASSWORD"
+
             value_from {
               secret_key_ref {
                 name = "cloudsql-db-secret"
@@ -114,24 +117,25 @@ resource "kubernetes_deployment_v1" "probestack_apigee_migration_service" {
             value = "probestack-prod-db"
           }
 
+          readiness_probe {
+            http_get {
+              path = "/api/v1/testspecs/actuator/health"
+              port = 8080
+            }
+            initial_delay_seconds = 30
+            period_seconds        = 10
+          }
+
           resources {
             requests = {
               cpu    = "50m"
               memory = "300Mi"
             }
+
             limits = {
               cpu    = "1000m"
               memory = "1Gi"
             }
-          }
-
-          readiness_probe {
-            http_get {
-              path = "/migration/v1/actuator/health"
-              port = 8080
-            }
-            initial_delay_seconds = 30
-            period_seconds        = 10
           }
 
           volume_mount {
@@ -149,42 +153,41 @@ resource "kubernetes_deployment_v1" "probestack_apigee_migration_service" {
   }
 }
 
-resource "kubectl_manifest" "probestack_apigee_migration_service_backend_config" {
+resource "kubectl_manifest" "fq_testspec_mgmt_backend" {
   yaml_body = <<YAML
 apiVersion: cloud.google.com/v1
 kind: BackendConfig
 metadata:
-  name: probestack-apigee-migration-service-backend-config
-  namespace: secure-production-app
+  name: fq-testspec-mgmt-backend
+  namespace: forgeq-prod
 spec:
-  timeoutSec: 300
   healthCheck:
-    requestPath: /migration/v1/actuator/health
+    requestPath: /api/v1/testspecs/actuator/health
     port: 8080
     type: HTTP
 YAML
 }
 
-resource "kubernetes_service_v1" "probestack_apigee_migration_service" {
+resource "kubernetes_service_v1" "fq_testspec_mgmt_svc" {
   metadata {
-    name      = "probestack-apigee-migration-service"
-    namespace = "secure-production-app"
+    name      = "fq-testspec-mgmt-svc"
+    namespace = "forgeq-prod"
 
     annotations = {
       "cloud.google.com/neg" = "{\"ingress\": true}"
       "cloud.google.com/backend-config" = jsonencode({
-        default = "probestack-apigee-migration-service-backend-config"
+        default = "fq-testspec-mgmt-backend"
       })
     }
 
     labels = {
-      app = "probestack-apigee-migration-service"
+      app = "fq-testspec-mgmt-svc"
     }
   }
 
   spec {
     selector = {
-      app = "probestack-apigee-migration-service"
+      app = "fq-testspec-mgmt-svc"
     }
 
     port {
