@@ -68,3 +68,20 @@ resource "kubernetes_namespace" "forgestudio" {
   }
 
 }
+
+resource "kubernetes_namespace" "forgeai" {
+  metadata {
+    name = "forgeai-prod"
+
+    labels = {
+      environment = "production"
+      tier        = "frontend"
+
+      "pod-security.kubernetes.io/enforce"         = "restricted"
+      "pod-security.kubernetes.io/enforce-version" = "v1.28"
+      "pod-security.kubernetes.io/warn"            = "restricted"
+      "pod-security.kubernetes.io/audit"           = "restricted"
+    }
+  }
+
+}

@@ -212,3 +212,13 @@ variable "auth0_client_secret" {
   type      = string
   sensitive = true
 }
+
+variable "probestack_forgehub_frontend_image" {
+  type    = string
+  default = "us-central1-docker.pkg.dev/probestack-prod/probestack-prod-apps/probestack-forgehub-frontend:latest"
+}
+
+variable "probestack_ai_gw_image" {
+  type    = string
+  default = "us-central1-docker.pkg.dev/probestack-prod/probestack-prod-apps/probestack-ai-gw:latest"
+}

@@ -592,3 +592,88 @@ resource "kubernetes_ingress_v1" "forgeshift_ingress" {
     }
   }
 }
+
+resource "google_compute_global_address" "forgeai_ip" {
+  name = "forgeai-ingress-ip"
+
+  lifecycle {
+    prevent_destroy = true
+  }
+}
+
+resource "kubernetes_manifest" "forgeai_cert" {
+  manifest = {
+    apiVersion = "networking.gke.io/v1"
+    kind       = "ManagedCertificate"
+
+    metadata = {
+      name      = "forgeai-cert"
+      namespace = "forgeai-prod"
+    }
+
+    spec = {
+      domains = ["prod.forgeai.probestack.io"]
+    }
+  }
+}
+
+resource "kubernetes_ingress_v1" "forgeai_ingress" {
+
+  depends_on = [
+    kubernetes_manifest.forgeai_cert,
+    google_compute_global_address.forgeai_ip
+  ]
+
+  metadata {
+    name      = "forgeai-ingress"
+    namespace = "forgeai-prod"
+
+    annotations = {
+      "kubernetes.io/ingress.class"                 = "gce"
+      "kubernetes.io/ingress.global-static-ip-name" = google_compute_global_address.forgeai_ip.name
+      "networking.gke.io/managed-certificates"      = "forgeai-cert"
+      "kubernetes.io/ingress.allow-http"            = "true"
+    }
+  }
+
+  spec {
+    rule {
+      host = "prod.forgeai.probestack.io"
+
+      http {
+
+        path {
+          path      = "/ai-gateway"
+          path_type = "Prefix"
+
+          backend {
+            service {
+              name = "probestack-ai-gw"
+              port { number = 80 }
+            }
+          }
+        }
+
+        path {
+          path      = "/"
+          path_type = "Prefix"
+
+          backend {
+            service {
+              name = "probestack-forgehub-frontend"
+              port { number = 80 }
+            }
+          }
+        }
+
+      }
+    }
+
+    default_backend {
+      service {
+        name = "probestack-forgehub-frontend"
+        port { number = 80 }
+      }
+    }
+  }
+}
