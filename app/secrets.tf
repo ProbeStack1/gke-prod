@@ -62,8 +62,8 @@ resource "kubernetes_secret_v1" "mongodb_secret_forgeq" {
   type = "Opaque"
 
   data = {
-    MONGODB_URI       = var.mongodb_uri
-    MONGODB_CONFIG_DB = var.mongodb_config_db
+    MONGODB_URI       = var.mongodb_uri_forgeq
+    MONGODB_CONFIG_DB = var.mongodb_config_db_forgeq
   }
 }
 
@@ -104,8 +104,8 @@ resource "kubernetes_secret_v1" "mongodb_secret_forgestudio" {
   type = "Opaque"
 
   data = {
-    MONGODB_URI       = var.mongodb_uri
-    MONGODB_CONFIG_DB = var.mongodb_config_db
+    MONGODB_URI       = var.mongodb_uri_forgestudio
+    MONGODB_CONFIG_DB = var.mongodb_config_db_forgestudio
   }
 }
 
@@ -113,6 +113,132 @@ resource "kubernetes_secret_v1" "auth0_secret_forgestudio" {
   metadata {
     name      = "auth0-secret"
     namespace = "forgestudio-prod"
+  }
+
+  type = "Opaque"
+
+  data = {
+    client_secret = var.auth0_client_secret
+  }
+}
+
+# Forgesphere Secrets
+
+resource "kubernetes_secret_v1" "cloudsql_db_secret_forgesphere" {
+  metadata {
+    name      = "cloudsql-db-secret"
+    namespace = "forgesphere-prod"
+  }
+
+  type = "Opaque"
+
+  data = {
+    password = var.cloudsql_password
+  }
+}
+
+resource "kubernetes_secret_v1" "mongodb_secret_forgesphere" {
+  metadata {
+    name      = "mongodb-secret"
+    namespace = "forgesphere-prod"
+  }
+
+  type = "Opaque"
+
+  data = {
+    MONGODB_URI       = var.mongodb_uri_forgesphere
+    MONGODB_CONFIG_DB = var.mongodb_config_db_forgesphere
+  }
+}
+
+resource "kubernetes_secret_v1" "auth0_secret_forgesphere" {
+  metadata {
+    name      = "auth0-secret"
+    namespace = "forgesphere-prod"
+  }
+
+  type = "Opaque"
+
+  data = {
+    client_secret = var.auth0_client_secret
+  }
+}
+
+# Forgeai Secrets
+
+resource "kubernetes_secret_v1" "cloudsql_db_secret_forgeai" {
+  metadata {
+    name      = "cloudsql-db-secret"
+    namespace = "forgeai-prod"
+  }
+
+  type = "Opaque"
+
+  data = {
+    password = var.cloudsql_password
+  }
+}
+
+resource "kubernetes_secret_v1" "mongodb_secret_forgeai" {
+  metadata {
+    name      = "mongodb-secret"
+    namespace = "forgeai-prod"
+  }
+
+  type = "Opaque"
+
+  data = {
+    MONGODB_URI       = var.mongodb_uri_forgeai
+    MONGODB_CONFIG_DB = var.mongodb_config_db_forgeai
+  }
+}
+
+resource "kubernetes_secret_v1" "auth0_secret_forgeai" {
+  metadata {
+    name      = "auth0-secret"
+    namespace = "forgeai-prod"
+  }
+
+  type = "Opaque"
+
+  data = {
+    client_secret = var.auth0_client_secret
+  }
+}
+
+# Forgekonnect Secrets
+
+resource "kubernetes_secret_v1" "cloudsql_db_secret_forgekonnect" {
+  metadata {
+    name      = "cloudsql-db-secret"
+    namespace = "forgekonnect-prod"
+  }
+
+  type = "Opaque"
+
+  data = {
+    password = var.cloudsql_password
+  }
+}
+
+resource "kubernetes_secret_v1" "mongodb_secret_forgekonnect" {
+  metadata {
+    name      = "mongodb-secret"
+    namespace = "forgekonnect-prod"
+  }
+
+  type = "Opaque"
+
+  data = {
+    MONGODB_URI       = var.mongodb_uri_forgekonnect
+    MONGODB_CONFIG_DB = var.mongodb_config_db_forgekonnect
+  }
+}
+
+resource "kubernetes_secret_v1" "auth0_secret_forgekonnect" {
+  metadata {
+    name      = "auth0-secret"
+    namespace = "forgekonnect-prod"
   }
 
   type = "Opaque"

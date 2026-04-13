@@ -66,5 +66,52 @@ resource "kubernetes_namespace" "forgestudio" {
       "pod-security.kubernetes.io/audit"           = "restricted"
     }
   }
+}
 
+resource "kubernetes_namespace" "forgesphere" {
+  metadata {
+    name = "forgesphere-prod"
+
+    labels = {
+      environment = "production"
+      tier        = "backend"
+
+      "pod-security.kubernetes.io/enforce"         = "restricted"
+      "pod-security.kubernetes.io/enforce-version" = "v1.28"
+      "pod-security.kubernetes.io/warn"            = "restricted"
+      "pod-security.kubernetes.io/audit"           = "restricted"
+    }
+  }
+}
+
+resource "kubernetes_namespace" "forgeai" {
+  metadata {
+    name = "forgeai-prod"
+
+    labels = {
+      environment = "production"
+      tier        = "backend"
+
+      "pod-security.kubernetes.io/enforce"         = "restricted"
+      "pod-security.kubernetes.io/enforce-version" = "v1.28"
+      "pod-security.kubernetes.io/warn"            = "restricted"
+      "pod-security.kubernetes.io/audit"           = "restricted"
+    }
+  }
+}
+
+resource "kubernetes_namespace" "forgekonnect" {
+  metadata {
+    name = "forgekonnect-prod"
+
+    labels = {
+      environment = "production"
+      tier        = "backend"
+
+      "pod-security.kubernetes.io/enforce"         = "restricted"
+      "pod-security.kubernetes.io/enforce-version" = "v1.28"
+      "pod-security.kubernetes.io/warn"            = "restricted"
+      "pod-security.kubernetes.io/audit"           = "restricted"
+    }
+  }
 }

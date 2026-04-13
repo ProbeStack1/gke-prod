@@ -421,6 +421,28 @@ resource "kubernetes_ingress_v1" "forgeq_ingress" {
         }
 
         path {
+          path      = "/load-tests"
+          path_type = "Prefix"
+          backend {
+            service {
+              name = "fq-load-test-mgmt-svc"
+              port { number = 80 }
+            }
+          }
+        }
+
+        path {
+          path      = "/functional-tests"
+          path_type = "Prefix"
+          backend {
+            service {
+              name = "fq-functional-test-mgmt-svc"
+              port { number = 80 }
+            }
+          }
+        }
+
+        path {
           path      = "/"
           path_type = "Prefix"
           backend {
@@ -492,7 +514,52 @@ resource "kubernetes_ingress_v1" "forgestudio_ingress" {
       host = var.forgestudio_domain
 
       http {
+        path {
+          path      = "/kubetail"
+          path_type = "Prefix"
 
+          backend {
+            service {
+              name = "kubetail-dashboard"
+
+              port {
+                number = 8080
+              }
+            }
+          }
+        }
+        path {
+          path      = "/api/v1/specs"
+          path_type = "Prefix"
+          backend {
+            service {
+              name = "fs-apispec-svc"
+              port { number = 80 }
+            }
+          }
+        }
+
+        path {
+          path      = "/api/v1/endpoints"
+          path_type = "Prefix"
+          backend {
+            service {
+              name = "fs-apiwizard-svc"
+              port { number = 80 }
+            }
+          }
+        }
+
+        path {
+          path      = "/api/v1/projects"
+          path_type = "Prefix"
+          backend {
+            service {
+              name = "fs-project-svc"
+              port { number = 80 }
+            }
+          }
+        }
 
         path {
           path      = "/"
@@ -587,6 +654,200 @@ resource "kubernetes_ingress_v1" "forgeshift_ingress" {
     default_backend {
       service {
         name = "react-vite"
+        port { number = 80 }
+      }
+    }
+  }
+}
+
+resource "google_compute_global_address" "forgesphere_ip" {
+  name = "forgesphere-ingress-ip"
+
+  lifecycle {
+    prevent_destroy = true
+  }
+}
+
+resource "kubernetes_manifest" "forgesphere_cert" {
+  manifest = {
+    apiVersion = "networking.gke.io/v1"
+    kind       = "ManagedCertificate"
+
+    metadata = {
+      name      = "forgesphere-cert"
+      namespace = "forgesphere-prod"
+    }
+
+    spec = {
+      domains = ["prod.forgesphere.probestack.io"] 
+    }
+  }
+}
+
+resource "kubernetes_ingress_v1" "forgesphere_ingress" {
+
+  depends_on = [
+    kubernetes_manifest.forgesphere_cert,
+    kubernetes_manifest.forgesphere_frontend_config,
+    google_compute_global_address.forgesphere_ip
+  ]
+
+  metadata {
+    name      = "forgesphere-ingress"
+    namespace = kubernetes_namespace.forgesphere.metadata[0].name
+
+    annotations = {
+      "kubernetes.io/ingress.class"                 = "gce"
+      "kubernetes.io/ingress.global-static-ip-name" = google_compute_global_address.forgesphere_ip.name
+      "networking.gke.io/managed-certificates"      = "forgesphere-cert"
+      "networking.gke.io/frontend-config"           = "forgesphere-frontend-config"
+      "kubernetes.io/ingress.allow-http"            = "true"
+    }
+  }
+
+  spec {
+    rule {
+      host = var.forgesphere_domain
+
+      http {
+
+        path {
+          path      = "/api-design"
+          path_type = "Prefix"
+          backend {
+            service {
+              name = "fsp-api-design-svc"
+              port { number = 80 }
+            }
+          }
+        }
+
+        path {
+          path      = "/api-development"
+          path_type = "Prefix"
+          backend {
+            service {
+              name = "fsp-api-development-svc"
+              port { number = 80 }
+            }
+          }
+        }
+
+        path {
+          path      = "/mock-api"
+          path_type = "Prefix"
+          backend {
+            service {
+              name = "fsp-api-mock-svc"
+              port { number = 80 }
+            }
+          }
+        }
+
+        path {
+          path      = "/consumer"
+          path_type = "Prefix"
+          backend {
+            service {
+              name = "fsp-consumer-svc"
+              port { number = 80 }
+            }
+          }
+        }
+
+        path {
+          path      = "/contract-testing"
+          path_type = "Prefix"
+          backend {
+            service {
+              name = "fsp-contract-testing-svc"
+              port { number = 80 }
+            }
+          }
+        }
+        
+        path {
+          path      = "/provider"
+          path_type = "Prefix"
+          backend {
+            service {
+              name = "fsp-provider-api-svc"
+              port { number = 80 }
+            }
+          }
+        }
+
+        path {
+          path      = "/mock-api"
+          path_type = "Prefix"
+          backend {
+            service {
+              name = "fsp-api-mock-svc"
+              port { number = 80 }
+            }
+          }
+        }
+
+        path {
+          path      = "/consumer"
+          path_type = "Prefix"
+          backend {
+            service {
+              name = "fsp-consumer-svc"
+              port { number = 80 }
+            }
+          }
+        }
+
+        path {
+          path      = "/requirement"
+          path_type = "Prefix"
+          backend {
+            service {
+              name = "fsp-requirement-mgmt-svc"
+              port { number = 80 }
+            }
+          }
+        }
+
+        path {
+          path      = "/test"
+          path_type = "Prefix"
+          backend {
+            service {
+              name = "fsp-test-generation-svc"
+              port { number = 80 }
+            }
+          }
+        }
+
+        path {
+          path      = "/onboarding"
+          path_type = "Prefix"
+          backend {
+            service {
+              name = "fsp-onboarding-svc"
+              port { number = 80 }
+            }
+          }
+        }
+
+        path {
+          path      = "/"
+          path_type = "Prefix"
+          backend {
+            service {
+              name = "forgesphere-fe"
+              port { number = 80 }
+            }
+          }
+        }
+      }
+    }
+
+    default_backend {
+      service {
+        name = "forgesphere-fe"
         port { number = 80 }
       }
     }

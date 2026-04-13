@@ -113,3 +113,25 @@ resource "kubernetes_manifest" "forgeshift_frontend_config" {
     }
   }
 }
+
+resource "kubernetes_manifest" "forgesphere_frontend_config" {
+
+  depends_on = [
+    time_sleep.wait_for_gke,
+    kubernetes_namespace.forgesphere
+  ]
+
+  manifest = {
+    apiVersion = "networking.gke.io/v1beta1"
+    kind       = "FrontendConfig"
+
+    metadata = {
+      name      = "forgesphere-frontend-config"
+      namespace = kubernetes_namespace.forgesphere.metadata[0].name
+    }
+
+    spec = {
+      sslPolicy = google_compute_ssl_policy.prod_ssl_policy.name
+    }
+  }
+}

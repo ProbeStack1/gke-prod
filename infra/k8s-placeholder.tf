@@ -5,6 +5,9 @@ locals {
     forgeq     = kubernetes_namespace.forgeq.metadata[0].name
     forgestudio     = kubernetes_namespace.forgestudio.metadata[0].name
     forgeshift = kubernetes_namespace.forgeshift.metadata[0].name
+    forgesphere = kubernetes_namespace.forgesphere.metadata[0].name
+    forgeai = kubernetes_namespace.forgeai.metadata[0].name
+    forgekonnect = kubernetes_namespace.forgekonnect.metadata[0].name
   }
 }
 
@@ -179,7 +182,6 @@ resource "kubernetes_deployment" "placeholder" {
       }
 
       spec {
-        # ✅ EXACT SAME AS PROD
         security_context {
           run_as_non_root = true
           run_as_user     = 101

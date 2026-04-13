@@ -21,7 +21,10 @@ locals {
     "secure-production-app",
     "forgeq-prod",
     "forgeshift-prod",
-    "forgestudio-prod"
+    "forgestudio-prod",
+    "forgesphere-prod",
+    "forgeai-prod",
+    "forgekonnect-prod"
   ]
 }
 
@@ -57,6 +60,9 @@ resource "kubernetes_annotations" "default_sa_annotation" {
     kubernetes_namespace.production,
     kubernetes_namespace.forgeq,
     kubernetes_namespace.forgeshift,
-    kubernetes_namespace.forgestudio
+    kubernetes_namespace.forgestudio,
+    kubernetes_namespace.forgesphere,
+    kubernetes_namespace.forgeai,
+    kubernetes_namespace.forgekonnect
   ]
 }

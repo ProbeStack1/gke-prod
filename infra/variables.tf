@@ -103,6 +103,25 @@ variable "forgeshift_domain" {
   default     = "forgeshift.probestack.io"
 }
 
+variable "forgesphere_domain" {
+  description = "Domain for forgesphere namespace"
+  type        = string
+  default     = "prod.forgesphere.probestack.io"
+}
+
+variable "forgeai_domain" {
+  description = "Domain for forgeai namespace"
+  type        = string
+  default     = "prod.forgeai.probestack.io"
+}
+
+variable "forgekonnect_domain" {
+  description = "Domain for forgekonnect namespace"
+  type        = string
+  default     = "prod.forgekonnect.probestack.io"
+}
+
+
 # CLOUD SQL
 
 variable "db_instance_name" {

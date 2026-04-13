@@ -177,7 +177,103 @@ variable "fq_dashboard_mgmt_svc_image" {
   default     = "us-central1-docker.pkg.dev/probestack-prod/probestack-prod-apps/fq-dashboard-mgmt-svc:e30a7ad04876f61c8fc34d40d81485ce8224c438"
 }
 
+variable "fq_functional_test_mgmt_svc_image" {
+  description = "Docker image for fq_functional_test_mgmt_svc_image"
+  type        = string
+  default     = "us-central1-docker.pkg.dev/probestack-prod/probestack-prod-apps/fq-functional-test-mgmt-svc:ece8df50c00ac8e4d3699ccfeb68322b8663999a"
+}
+
+variable "fq_load_test_mgmt_svc_image" {
+  description = "Docker image for fq_load_test_mgmt_svc_image"
+  type        = string
+  default     = "us-central1-docker.pkg.dev/probestack-prod/probestack-prod-apps/fq-load-test-mgmt-svc:9600bea8f42b922b4d990765535391c42376624a"
+}
+
 variable "forgestudio_fe_image" {
+  type    = string
+  default = "us-central1-docker.pkg.dev/probestack-prod/probestack-prod-apps/forgeq-fe@sha256:43ec306249e1c92e951973157de93d51694340bdebb9b45ff51e6dfbe432e9b2"
+}
+
+variable "fs_apispec_svc_image" {
+  type    = string
+  default = "us-central1-docker.pkg.dev/probestack-prod/probestack-prod-apps/fs-apispec-svc@sha256:9ffb7eab299d7a92e2cf2baa9473edcff63a23fdb426be3821e191f35809203a"
+}
+
+variable "fs_apiwizard_svc_image" {
+  type    = string
+  default = "us-central1-docker.pkg.dev/probestack-prod/probestack-prod-apps/fs-apiwizard-svc@sha256:029c6b73c468bacb12ef7fc83daf205ffdc12becc84ca8d6ebe377289ea6f278"
+}
+
+variable "fs_project_svc_image" {
+  type    = string
+  default = "us-central1-docker.pkg.dev/probestack-prod/probestack-prod-apps/fs-project-svc@sha256:1498643740a816a2da660ae9f4cbb8c3306d1212906354c2c5985c4c3fe11c63"
+}
+
+variable "fsp_api_design_svc_image" {
+  description = "Docker image for fsp_api_design_svc_image"
+  type        = string
+  default     = "us-central1-docker.pkg.dev/probestack-prod/probestack-prod-apps/fq-dashboard-mgmt-svc:e30a7ad04876f61c8fc34d40d81485ce8224c438"
+}
+
+variable "fsp_api_development_svc_image" {
+  description = "Docker image for fsp_api_developemnt_svc_image"
+  type        = string
+  default     = "us-central1-docker.pkg.dev/probestack-prod/probestack-prod-apps/fq-dashboard-mgmt-svc:e30a7ad04876f61c8fc34d40d81485ce8224c438"
+}
+
+variable "fsp_api_mock_svc_image" {
+  description = "Docker image for fsp_api_mock_svc_image"
+  type        = string
+  default     = "us-central1-docker.pkg.dev/probestack-prod/probestack-prod-apps/fq-dashboard-mgmt-svc:e30a7ad04876f61c8fc34d40d81485ce8224c438"
+}
+
+variable "fsp_consumer_svc_image" {
+  description = "Docker image for fsp_consumer_svc_image"
+  type        = string
+  default     = "us-central1-docker.pkg.dev/probestack-prod/probestack-prod-apps/fq-dashboard-mgmt-svc:e30a7ad04876f61c8fc34d40d81485ce8224c438"
+}
+
+variable "fsp_contract_testing_svc_image" {
+  description = "Docker image for fsp_contract_testing_svc_image"
+  type        = string
+  default     = "us-central1-docker.pkg.dev/probestack-prod/probestack-prod-apps/fq-dashboard-mgmt-svc:e30a7ad04876f61c8fc34d40d81485ce8224c438"
+}
+
+variable "fsp_onboarding_svc_image" {
+  description = "Docker image for fsp_onboarding_svc_image"
+  type        = string
+  default     = "us-central1-docker.pkg.dev/probestack-prod/probestack-prod-apps/fq-dashboard-mgmt-svc:e30a7ad04876f61c8fc34d40d81485ce8224c438"
+}
+
+variable "fsp_provider_api_svc_image" {
+  description = "Docker image for fsp_provider_api_svc_image"
+  type        = string
+  default     = "us-central1-docker.pkg.dev/probestack-prod/probestack-prod-apps/fq-dashboard-mgmt-svc:e30a7ad04876f61c8fc34d40d81485ce8224c438"
+}
+
+variable "fsp_requirement_mgmt_svc_image" {
+  description = "Docker image for fsp_requirement_mgmt_svc_image"
+  type        = string
+  default     = "us-central1-docker.pkg.dev/probestack-prod/probestack-prod-apps/fq-dashboard-mgmt-svc:e30a7ad04876f61c8fc34d40d81485ce8224c438"
+}
+
+variable "fsp_test_generation_svc_image" {
+  description = "Docker image for fsp_test_generation_svc_image"
+  type        = string
+  default     = "us-central1-docker.pkg.dev/probestack-prod/probestack-prod-apps/fq-dashboard-mgmt-svc:e30a7ad04876f61c8fc34d40d81485ce8224c438"
+}
+
+variable "forgesphere_fe_image" {
+  type    = string
+  default = "us-central1-docker.pkg.dev/probestack-prod/probestack-prod-apps/forgesphere-fe@sha256:6f25b8cfabd77449cff8c75cf9c121831d3b10721aa85915581682d40916242a"
+}
+
+variable "forgeai_fe_image" {
+  type    = string
+  default = "us-central1-docker.pkg.dev/probestack-prod/probestack-prod-apps/forgeq-fe@sha256:43ec306249e1c92e951973157de93d51694340bdebb9b45ff51e6dfbe432e9b2"
+}
+
+variable "forgekonnect_fe_image" {
   type    = string
   default = "us-central1-docker.pkg.dev/probestack-prod/probestack-prod-apps/forgeq-fe@sha256:43ec306249e1c92e951973157de93d51694340bdebb9b45ff51e6dfbe432e9b2"
 }
@@ -204,6 +300,66 @@ variable "mongodb_uri" {
 }
 
 variable "mongodb_config_db" {
+  type      = string
+  sensitive = true
+}
+
+variable "mongodb_uri_forgeshift" {
+  type      = string
+  sensitive = true
+}
+
+variable "mongodb_config_db_forgeshift" {
+  type      = string
+  sensitive = true
+}
+
+variable "mongodb_uri_forgestudio" {
+  type      = string
+  sensitive = true
+}
+
+variable "mongodb_config_db_forgestudio" {
+  type      = string
+  sensitive = true
+}
+
+variable "mongodb_uri_forgesphere" {
+  type      = string
+  sensitive = true
+}
+
+variable "mongodb_config_db_forgesphere" {
+  type      = string
+  sensitive = true
+}
+
+variable "mongodb_uri_forgeq" {
+  type      = string
+  sensitive = true
+}
+
+variable "mongodb_config_db_forgeq" {
+  type      = string
+  sensitive = true
+}
+
+variable "mongodb_uri_forgeai" {
+  type      = string
+  sensitive = true
+}
+
+variable "mongodb_config_db_forgeai" {
+  type      = string
+  sensitive = true
+}
+
+variable "mongodb_uri_forgekonnect" {
+  type      = string
+  sensitive = true
+}
+
+variable "mongodb_config_db_forgekonnect" {
   type      = string
   sensitive = true
 }

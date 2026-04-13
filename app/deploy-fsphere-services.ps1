@@ -1,4 +1,4 @@
-Write-Host "Starting ForgeQ Services Deployment..." -ForegroundColor Green
+Write-Host "Starting forgesphere Services Deployment..." -ForegroundColor Green
 
 function Deploy-Service {
     param (
@@ -15,12 +15,12 @@ function Deploy-Service {
     terraform apply -auto-approve -target="kubectl_manifest.$backend"
 
     # Wait for rollout (IMPORTANT)
-    kubectl rollout status deployment $name -n forgeq-prod
+    kubectl rollout status deployment $name -n forgesphere-prod
 }
 
 $services = @(
-    "fq_functional_test_mgmt_svc",
-    "fq_load_test_mgmt_svc"
+    "fsp_requirement_mgmt_svc",
+    "fsp_test_generation_svc"
 )
 
 foreach ($svc in $services) {
@@ -28,8 +28,8 @@ foreach ($svc in $services) {
 }
 
 Write-Host "----------------------------------------" -ForegroundColor Green
-Write-Host "All ForgeQ services deployed successfully!" -ForegroundColor Green
+Write-Host "All forgesphere services deployed successfully!" -ForegroundColor Green
 
 Write-Host "Checking Kubernetes resources..." -ForegroundColor Cyan
-kubectl get pods -n forgeq-prod
-kubectl get svc -n forgeq-prod
+kubectl get pods -n forgesphere-prod
+kubectl get svc -n forgesphere-prod
