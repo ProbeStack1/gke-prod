@@ -24,7 +24,8 @@ locals {
     "forgestudio-prod",
     "forgesphere-prod",
     "forgeai-prod",
-    "forgekonnect-prod"
+    "forgekonnect-prod",
+    "forgehub-prod"
   ]
 }
 
@@ -63,6 +64,7 @@ resource "kubernetes_annotations" "default_sa_annotation" {
     kubernetes_namespace.forgestudio,
     kubernetes_namespace.forgesphere,
     kubernetes_namespace.forgeai,
+    kubernetes_namespace.forgehub,
     kubernetes_namespace.forgekonnect
   ]
 }

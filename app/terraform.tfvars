@@ -30,6 +30,10 @@ mongodb_uri_forgeai = "mongodb+srv://admin_db_user:HdhPLHmhHEhxSUTa@probestack-p
 
 mongodb_config_db_forgeai = "probestack-forgeai"
 
+mongodb_uri_forgehub = "mongodb+srv://admin_db_user:HdhPLHmhHEhxSUTa@probestack-prod.mby902c.mongodb.net/probestack-forgehub?appName=probestack-prod"
+
+mongodb_config_db_forgehub = "probestack-forgehub"
+
 mongodb_uri_forgekonnect = "mongodb+srv://admin_db_user:HdhPLHmhHEhxSUTa@probestack-prod.mby902c.mongodb.net/probestack-forgekonnect?appName=probestack-prod"
 
 mongodb_config_db_forgekonnect = "probestack-forgekonnect"

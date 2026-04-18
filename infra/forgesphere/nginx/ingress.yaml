@@ -1,0 +1,17 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: forgesphere-ingress
+  namespace: forgesphere-prod
+spec:
+  rules:
+    - host: prod.forgesphere.probestack.io
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: nginx-gateway-svc
+                port:
+                  number: 80

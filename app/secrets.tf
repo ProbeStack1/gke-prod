@@ -206,6 +206,48 @@ resource "kubernetes_secret_v1" "auth0_secret_forgeai" {
   }
 }
 
+# Forgehub Secrets
+
+resource "kubernetes_secret_v1" "cloudsql_db_secret_forgehub" {
+  metadata {
+    name      = "cloudsql-db-secret"
+    namespace = "forgehub-prod"
+  }
+
+  type = "Opaque"
+
+  data = {
+    password = var.cloudsql_password
+  }
+}
+
+resource "kubernetes_secret_v1" "mongodb_secret_forgehub" {
+  metadata {
+    name      = "mongodb-secret"
+    namespace = "forgehub-prod"
+  }
+
+  type = "Opaque"
+
+  data = {
+    MONGODB_URI       = var.mongodb_uri_forgehub
+    MONGODB_CONFIG_DB = var.mongodb_config_db_forgehub
+  }
+}
+
+resource "kubernetes_secret_v1" "auth0_secret_forgehub" {
+  metadata {
+    name      = "auth0-secret"
+    namespace = "forgehub-prod"
+  }
+
+  type = "Opaque"
+
+  data = {
+    client_secret = var.auth0_client_secret
+  }
+}
+
 # Forgekonnect Secrets
 
 resource "kubernetes_secret_v1" "cloudsql_db_secret_forgekonnect" {

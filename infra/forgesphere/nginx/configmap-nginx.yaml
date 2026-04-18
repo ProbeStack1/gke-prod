@@ -1,0 +1,54 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nginx-config
+  namespace: forgesphere-prod
+data:
+  nginx.conf: |
+    events {}
+
+    http {
+      server {
+        listen 80;
+
+        location /api/design {
+          proxy_pass http://fsp-api-design-svc;
+        }
+
+        location /api/development {
+          proxy_pass http://fsp-api-development-svc;
+        }
+
+        location /api/mock {
+          proxy_pass http://fsp-api-mock-svc;
+        }
+
+        location /api/consumer {
+          proxy_pass http://fsp-consumer-svc;
+        }
+
+        location /api/contract {
+          proxy_pass http://fsp-contract-testing-svc;
+        }
+
+        location /api/onboarding {
+          proxy_pass http://fsp-onboarding-svc;
+        }
+
+        location /api/provider {
+          proxy_pass http://fsp-provider-api-svc;
+        }
+
+        location /api/requirement {
+          proxy_pass http://fsp-requirement-mgmt-svc;
+        }
+
+        location /api/testgen {
+          proxy_pass http://fsp-test-generation-svc;
+        }
+
+        location / {
+          proxy_pass http://forgesphere-fe;
+        }
+      }
+    }

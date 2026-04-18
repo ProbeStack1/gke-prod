@@ -152,12 +152,12 @@ resource "kubernetes_deployment_v1" "fq_functional_test_mgmt_svc" {
   }
 }
 
-resource "kubectl_manifest" "fq_functional_test_backend" {
+resource "kubectl_manifest" "fq_functional_test_mgmt_backend" {
   yaml_body = <<YAML
 apiVersion: cloud.google.com/v1
 kind: BackendConfig
 metadata:
-  name: fq-functional-test-backend
+  name: fq-functional-test-mgmt-backend
   namespace: forgeq-prod
 spec:
   healthCheck:
@@ -175,7 +175,7 @@ resource "kubernetes_service_v1" "fq_functional_test_mgmt_svc" {
     annotations = {
       "cloud.google.com/neg" = "{\"ingress\": true}"
       "cloud.google.com/backend-config" = jsonencode({
-        default = "fq-activity-mgmt-backend"
+        default = "fq-functional-test-mgmt-backend"
       })
     }
 

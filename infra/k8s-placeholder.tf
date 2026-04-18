@@ -7,6 +7,7 @@ locals {
     forgeshift = kubernetes_namespace.forgeshift.metadata[0].name
     forgesphere = kubernetes_namespace.forgesphere.metadata[0].name
     forgeai = kubernetes_namespace.forgeai.metadata[0].name
+    forgehub = kubernetes_namespace.forgehub.metadata[0].name
     forgekonnect = kubernetes_namespace.forgekonnect.metadata[0].name
   }
 }

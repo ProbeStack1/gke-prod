@@ -853,3 +853,150 @@ resource "kubernetes_ingress_v1" "forgesphere_ingress" {
     }
   }
 }
+
+resource "google_compute_global_address" "forgeai_ip" {
+  name = "forgeai-ingress-ip"
+
+  lifecycle {
+    prevent_destroy = true
+  }
+}
+
+resource "kubernetes_manifest" "forgeai_cert" {
+  manifest = {
+    apiVersion = "networking.gke.io/v1"
+    kind       = "ManagedCertificate"
+
+    metadata = {
+      name      = "forgeai-cert"
+      namespace = "forgeai-prod"
+    }
+
+    spec = {
+      domains = ["prod.forgeai.probestack.io"] 
+    }
+  }
+}
+
+resource "kubernetes_ingress_v1" "forgeai_ingress" {
+
+  depends_on = [
+    kubernetes_manifest.forgeai_cert,
+    kubernetes_manifest.forgeai_frontend_config,
+    google_compute_global_address.forgeai_ip
+  ]
+
+  metadata {
+    name      = "forgeai-ingress"
+    namespace = kubernetes_namespace.forgeai.metadata[0].name
+
+    annotations = {
+      "kubernetes.io/ingress.class"                 = "gce"
+      "kubernetes.io/ingress.global-static-ip-name" = google_compute_global_address.forgeai_ip.name
+      "networking.gke.io/managed-certificates"      = "forgeai-cert"
+      "networking.gke.io/frontend-config"           = "forgeai-frontend-config"
+      "kubernetes.io/ingress.allow-http"            = "true"
+    }
+  }
+
+  spec {
+    rule {
+      host = var.forgeai_domain
+
+      http {
+
+        
+        path {
+          path      = "/"
+          path_type = "Prefix"
+          backend {
+            service {
+              name = "forgeai-fe"
+              port { number = 80 }
+            }
+          }
+        }
+      }
+    }
+
+    default_backend {
+      service {
+        name = "forgeai-fe"
+        port { number = 80 }
+      }
+    }
+  }
+}
+
+resource "google_compute_global_address" "forgehub_ip" {
+  name = "forgehub-ingress-ip"
+
+  lifecycle {
+    prevent_destroy = true
+  }
+}
+
+resource "kubernetes_manifest" "forgehub_cert" {
+  manifest = {
+    apiVersion = "networking.gke.io/v1"
+    kind       = "ManagedCertificate"
+
+    metadata = {
+      name      = "forgehub-cert"
+      namespace = "forgehub-prod"
+    }
+
+    spec = {
+      domains = ["prod.forgehub.probestack.io"] 
+    }
+  }
+}
+
+resource "kubernetes_ingress_v1" "forgehub_ingress" {
+
+  depends_on = [
+    kubernetes_manifest.forgehub_cert,
+    kubernetes_manifest.forgehub_frontend_config,
+    google_compute_global_address.forgehub_ip
+  ]
+
+  metadata {
+    name      = "forgehub-ingress"
+    namespace = kubernetes_namespace.forgehub.metadata[0].name
+
+    annotations = {
+      "kubernetes.io/ingress.class"                 = "gce"
+      "kubernetes.io/ingress.global-static-ip-name" = google_compute_global_address.forgehub_ip.name
+      "networking.gke.io/managed-certificates"      = "forgehub-cert"
+      "networking.gke.io/frontend-config"           = "forgehub-frontend-config"
+      "kubernetes.io/ingress.allow-http"            = "true"
+    }
+  }
+
+  spec {
+    rule {
+      host = var.forgehub_domain
+
+      http {
+
+        path {
+          path      = "/"
+          path_type = "Prefix"
+          backend {
+            service {
+              name = "forgehub-fe"
+              port { number = 80 }
+            }
+          }
+        }
+      }
+    }
+
+    default_backend {
+      service {
+        name = "forgehub-fe"
+        port { number = 80 }
+      }
+    }
+  }
+}

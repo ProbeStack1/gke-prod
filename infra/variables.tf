@@ -115,6 +115,12 @@ variable "forgeai_domain" {
   default     = "prod.forgeai.probestack.io"
 }
 
+variable "forgehub_domain" {
+  description = "Domain for forgehub namespace"
+  type        = string
+  default     = "prod.forgehub.probestack.io"
+}
+
 variable "forgekonnect_domain" {
   description = "Domain for forgekonnect namespace"
   type        = string

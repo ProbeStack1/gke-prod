@@ -12,6 +12,14 @@ resource "kubernetes_deployment_v1" "admin_backend" {
   spec {
 
     replicas = 1
+    strategy {
+      type = "RollingUpdate"
+
+      rolling_update {
+        max_surge       = 0
+        max_unavailable = 1
+      }
+    }
 
     selector {
       match_labels = {
@@ -127,12 +135,12 @@ resource "kubernetes_deployment_v1" "admin_backend" {
 
           env {
             name  = "AUTH0_DOMAIN"
-            value = "probestack-usa-prod.us.auth0.com"
+            value = "probestack-usa-dev.us.auth0.com"
           }
 
           env {
             name  = "AUTH0_CLIENT_ID"
-            value = "3iWcIhLljSPnbGbkQXsSMuPyTQksh8OF"
+            value = "9SdXszGMEgUBFQrqK7s5CNa5L5Ky6zHh"
           }
 
           env {

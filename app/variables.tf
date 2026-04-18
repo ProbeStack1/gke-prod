@@ -270,12 +270,17 @@ variable "forgesphere_fe_image" {
 
 variable "forgeai_fe_image" {
   type    = string
-  default = "us-central1-docker.pkg.dev/probestack-prod/probestack-prod-apps/forgeq-fe@sha256:43ec306249e1c92e951973157de93d51694340bdebb9b45ff51e6dfbe432e9b2"
+  default = "us-central1-docker.pkg.dev/probestack-prod/probestack-prod-apps/probestack-ai-gw:c56f6ff719d081e99e2b81defda11bb4ccfc05c0@sha256:8cf0b7d618f2a165308875b2509ceb8c326d00dc0c68f4bafcf3d3c74b09273a"
 }
 
 variable "forgekonnect_fe_image" {
   type    = string
   default = "us-central1-docker.pkg.dev/probestack-prod/probestack-prod-apps/forgeq-fe@sha256:43ec306249e1c92e951973157de93d51694340bdebb9b45ff51e6dfbe432e9b2"
+}
+
+variable "forgehub_fe_image" {
+  type    = string
+  default = " us-central1-docker.pkg.dev/probestack-prod/probestack-prod-apps/forgehub-fe:dd9cc6b45287ff40e846851aebbecdc46c946c7b@sha256:4f2a87c0fc2d237ad71c563d5d2f2087bf59cd08335d2023fc450f83686c4a1f"
 }
 
 variable "cloudsql_tier" {
@@ -350,6 +355,16 @@ variable "mongodb_uri_forgeai" {
 }
 
 variable "mongodb_config_db_forgeai" {
+  type      = string
+  sensitive = true
+}
+
+variable "mongodb_uri_forgehub" {
+  type      = string
+  sensitive = true
+}
+
+variable "mongodb_config_db_forgehub" {
   type      = string
   sensitive = true
 }

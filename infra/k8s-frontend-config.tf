@@ -135,3 +135,47 @@ resource "kubernetes_manifest" "forgesphere_frontend_config" {
     }
   }
 }
+
+resource "kubernetes_manifest" "forgeai_frontend_config" {
+
+  depends_on = [
+    time_sleep.wait_for_gke,
+    kubernetes_namespace.forgeai
+  ]
+
+  manifest = {
+    apiVersion = "networking.gke.io/v1beta1"
+    kind       = "FrontendConfig"
+
+    metadata = {
+      name      = "forgeai-frontend-config"
+      namespace = kubernetes_namespace.forgeai.metadata[0].name
+    }
+
+    spec = {
+      sslPolicy = google_compute_ssl_policy.prod_ssl_policy.name
+    }
+  }
+}
+
+resource "kubernetes_manifest" "forgehub_frontend_config" {
+
+  depends_on = [
+    time_sleep.wait_for_gke,
+    kubernetes_namespace.forgehub
+  ]
+
+  manifest = {
+    apiVersion = "networking.gke.io/v1beta1"
+    kind       = "FrontendConfig"
+
+    metadata = {
+      name      = "forgehub-frontend-config"
+      namespace = kubernetes_namespace.forgehub.metadata[0].name
+    }
+
+    spec = {
+      sslPolicy = google_compute_ssl_policy.prod_ssl_policy.name
+    }
+  }
+}
