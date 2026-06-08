@@ -98,7 +98,7 @@ resource "kubernetes_deployment_v1" "admin_backend" {
 
           env {
             name  = "DB_NAME"
-            value = "admin_dashboard"
+            value = "probestack_admin"
           }
 
           env {
@@ -127,7 +127,7 @@ resource "kubernetes_deployment_v1" "admin_backend" {
 
             value_from {
               secret_key_ref {
-                name = "mongodb-secret"
+                name = kubernetes_secret_v1.mongodb_secret.metadata[0].name
                 key  = "MONGODB_URI"
               }
             }
@@ -206,6 +206,13 @@ resource "kubernetes_deployment_v1" "admin_backend" {
         }
       }
     }
+  }
+
+  lifecycle {
+    ignore_changes = [
+      spec[0].template[0].spec[0].container[0].image,
+      spec[0].template[0].spec[0].container[1].image,
+    ]
   }
 }
 

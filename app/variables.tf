@@ -18,12 +18,30 @@ variable "cluster_name" {
 variable "domain_name" {
   description = "Temporary domain for new cluster during migration"
   type        = string
-  default     = "prod.probestack.io"
+  default     = "probestack.io"
 }
 
 variable "react_vite_image" {
   type    = string
   default = "us-central1-docker.pkg.dev/probestack-prod/probestack-prod-apps/react-vite:1384b3b4837460c9109cb8dc66c70ad362b7f517"
+}
+
+variable "forgeshift_w2k_fe_image" {
+  description = "Docker image for ForgeShift W2K frontend"
+  type        = string
+  default     = "us-central1-docker.pkg.dev/probestack-prod/probestack-prod-apps/react-vite:1384b3b4837460c9109cb8dc66c70ad362b7f517"
+}
+
+variable "forgeshift_es2k_fe_image" {
+  description = "Docker image for ForgeShift ES2K frontend"
+  type        = string
+  default     = "us-central1-docker.pkg.dev/probestack-prod/probestack-prod-apps/react-vite:1384b3b4837460c9109cb8dc66c70ad362b7f517"
+}
+
+variable "forgeshift_es2x_fe_image" {
+  description = "Docker image for ForgeShift ES2X frontend"
+  type        = string
+  default     = "us-central1-docker.pkg.dev/probestack-prod/probestack-prod-apps/react-vite:1384b3b4837460c9109cb8dc66c70ad362b7f517"
 }
 
 variable "react_admin_image" {
@@ -76,6 +94,36 @@ variable "probestack_profile_config_service_image" {
   default = "us-central1-docker.pkg.dev/probestack-prod/probestack-prod-apps/probestack-profile-config-service:570fa32ca50f53bca5723ba4367b166d6484579b"
 }
 
+variable "forgeshift_wso2_profile_config_service_image" {
+  type    = string
+  default = "us-central1-docker.pkg.dev/probestack-prod/probestack-prod-apps/forgeshift-wso2-profile-config-service:latest"
+}
+
+variable "forgeshift_wso2_discovery_service_image" {
+  type    = string
+  default = "us-central1-docker.pkg.dev/probestack-prod/probestack-prod-apps/probestack-profile-config-service:570fa32ca50f53bca5723ba4367b166d6484579b"
+}
+
+variable "forgeshift_wso2_assessment_service_image" {
+  type    = string
+  default = "us-central1-docker.pkg.dev/probestack-prod/probestack-prod-apps/forgeshift-wso2-assessment-service:latest"
+}
+
+variable "forgeshift_wso2_migration_service_image" {
+  type    = string
+  default = "us-central1-docker.pkg.dev/probestack-prod/probestack-prod-apps/forgeshift-wso2-migration-service:latest"
+}
+
+variable "forgeshift_wso2_validation_service_image" {
+  type    = string
+  default = "us-central1-docker.pkg.dev/probestack-prod/probestack-prod-apps/forgeshift-wso2-validation-service:latest"
+}
+variable "forgeshift_wso2_cutover_service_image" {
+  description = "Docker image for ForgesShift WSO2 cutover service"
+  type        = string
+  default     = "us-central1-docker.pkg.dev/probestack-prod/probestack-prod-apps/forgeshift-wso2-cutover-service:latest"
+}
+
 variable "forgeq_fe_image" {
   type    = string
   default = "us-central1-docker.pkg.dev/probestack-prod/probestack-prod-apps/forgeq-fe@sha256:43ec306249e1c92e951973157de93d51694340bdebb9b45ff51e6dfbe432e9b2"
@@ -101,6 +149,12 @@ variable "fq_collection_mgmt_svc_image" {
 
 variable "fq_workspace_mgmt_svc_image" {
   description = "Docker image for fq-workspace-mgmt-svc"
+  type        = string
+  default     = "us-central1-docker.pkg.dev/probestack-prod/probestack-prod-apps/forgeq-workspace-mgmt-svc@sha256:dcaeb81f02be913548fb4ff3e0e1a62e5348105a4e99b1a5f7741b50b5a0e129"
+}
+
+variable "forgeq_ai_assistant_svc_image" {
+  description = "Docker image for forgeq-ai-assistant-svc"
   type        = string
   default     = "us-central1-docker.pkg.dev/probestack-prod/probestack-prod-apps/forgeq-workspace-mgmt-svc@sha256:dcaeb81f02be913548fb4ff3e0e1a62e5348105a4e99b1a5f7741b50b5a0e129"
 }
@@ -199,9 +253,19 @@ variable "fs_apispec_svc_image" {
   default = "us-central1-docker.pkg.dev/probestack-prod/probestack-prod-apps/fs-apispec-svc@sha256:9ffb7eab299d7a92e2cf2baa9473edcff63a23fdb426be3821e191f35809203a"
 }
 
+variable "fs_sdkgenerator_svc_image" {
+  type    = string
+  default = "us-central1-docker.pkg.dev/probestack-prod/probestack-prod-apps/fs-sdkgenerator-svc:a1718273b367e2796251c8aa993cb3b91f90323d"
+}
+
 variable "fs_apiwizard_svc_image" {
   type    = string
   default = "us-central1-docker.pkg.dev/probestack-prod/probestack-prod-apps/fs-apiwizard-svc@sha256:029c6b73c468bacb12ef7fc83daf205ffdc12becc84ca8d6ebe377289ea6f278"
+}
+
+variable "fs_collaboration_svc_image" {
+  type    = string
+  default = "us-central1-docker.pkg.dev/probestack-prod/probestack-prod-apps/fs-collaboration-svc:latest"
 }
 
 variable "fs_project_svc_image" {
@@ -219,6 +283,12 @@ variable "fsp_api_development_svc_image" {
   description = "Docker image for fsp_api_developemnt_svc_image"
   type        = string
   default     = "us-central1-docker.pkg.dev/probestack-prod/probestack-prod-apps/fq-dashboard-mgmt-svc:e30a7ad04876f61c8fc34d40d81485ce8224c438"
+}
+
+variable "fsp_mcp_generation_svc_image" {
+  description = "Docker image for fsp_mcp_generation_svc_image"
+  type        = string
+  default     = "us-central1-docker.pkg.dev/probestack-prod/probestack-prod-apps/fsp-mcp-generation-svc:7cf9dcd24693c82b65e467d7f06bfe6158dfb0d3"
 }
 
 variable "fsp_api_mock_svc_image" {
@@ -263,6 +333,18 @@ variable "fsp_test_generation_svc_image" {
   default     = "us-central1-docker.pkg.dev/probestack-prod/probestack-prod-apps/fq-dashboard-mgmt-svc:e30a7ad04876f61c8fc34d40d81485ce8224c438"
 }
 
+variable "fsp_gatewayonboarding_svc_image" {
+  description = "Docker image for fsp_gatewayonboarding_svc_image"
+  type        = string
+  default     = "us-central1-docker.pkg.dev/probestack-prod/probestack-prod-apps/fsp-gatewayonboarding-svc:latest"
+}
+
+variable "fsp_compliance_svc_image" {
+  description = "Docker image for fsp_compliance_svc"
+  type        = string
+  default     = "us-central1-docker.pkg.dev/probestack-prod/probestack-prod-apps/fq-dashboard-mgmt-svc:e30a7ad04876f61c8fc34d40d81485ce8224c438"
+}
+
 variable "forgesphere_fe_image" {
   type    = string
   default = "us-central1-docker.pkg.dev/probestack-prod/probestack-prod-apps/forgesphere-fe@sha256:6f25b8cfabd77449cff8c75cf9c121831d3b10721aa85915581682d40916242a"
@@ -280,7 +362,18 @@ variable "forgekonnect_fe_image" {
 
 variable "forgehub_fe_image" {
   type    = string
-  default = " us-central1-docker.pkg.dev/probestack-prod/probestack-prod-apps/forgehub-fe:dd9cc6b45287ff40e846851aebbecdc46c946c7b@sha256:4f2a87c0fc2d237ad71c563d5d2f2087bf59cd08335d2023fc450f83686c4a1f"
+  default = "us-central1-docker.pkg.dev/probestack-prod/probestack-prod-apps/forgehub-fe:dd9cc6b45287ff40e846851aebbecdc46c946c7b@sha256:4f2a87c0fc2d237ad71c563d5d2f2087bf59cd08335d2023fc450f83686c4a1f"
+}
+
+variable "fsp_kong_wrapper_image" {
+  type    = string
+  default = "us-central1-docker.pkg.dev/probestack-prod/probestack-prod-apps/fsp-kong-wrapper-svc:265ed187b7b05e27b7aef9ff3e21b296c5c34852"
+}
+
+variable "fsp_apigee_wrapper_svc_image" {
+  description = "Docker image for fsp_apigee_wrapper_svc"
+  type        = string
+  default     = "us-central1-docker.pkg.dev/probestack-prod/probestack-prod-apps/fsp-apigee-wrapper-svc:cbc23442dc7c11378de33ed20255cb262bad8822"
 }
 
 variable "cloudsql_tier" {
@@ -291,7 +384,7 @@ variable "cloudsql_tier" {
 
 variable "cloudsql_user" {
   type    = string
-  default = "admin_dashboard"
+  default = "probestack_admin"
 }
 
 variable "cloudsql_password" {
@@ -383,3 +476,5 @@ variable "auth0_client_secret" {
   type      = string
   sensitive = true
 }
+
+

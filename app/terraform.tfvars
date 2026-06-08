@@ -1,6 +1,6 @@
 project_id = "probestack-prod"
 
-domain_name = "prod.probestack.io"
+domain_name = "probestack.io"
 
 cloudsql_tier     = "db-custom-2-7680"
 cloudsql_user     = "db_user"
@@ -38,4 +38,4 @@ mongodb_uri_forgekonnect = "mongodb+srv://admin_db_user:HdhPLHmhHEhxSUTa@probest
 
 mongodb_config_db_forgekonnect = "probestack-forgekonnect"
 
-auth0_client_secret =""
+auth0_client_secret = ""

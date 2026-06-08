@@ -73,7 +73,7 @@ resource "kubernetes_deployment_v1" "fq_environment_mgmt_svc" {
 
             value_from {
               secret_key_ref {
-                name = "mongodb-secret"
+                name = kubernetes_secret_v1.mongodb_secret_forgeq.metadata[0].name
                 key  = "MONGODB_URI"
               }
             }
@@ -84,7 +84,7 @@ resource "kubernetes_deployment_v1" "fq_environment_mgmt_svc" {
 
             value_from {
               secret_key_ref {
-                name = "mongodb-secret"
+                name = kubernetes_secret_v1.mongodb_secret_forgeq.metadata[0].name
                 key  = "MONGODB_CONFIG_DB"
               }
             }
@@ -148,6 +148,12 @@ resource "kubernetes_deployment_v1" "fq_environment_mgmt_svc" {
         }
       }
     }
+  }
+
+  lifecycle {
+    ignore_changes = [
+      spec[0].template[0].spec[0].container[0].image,
+    ]
   }
 }
 

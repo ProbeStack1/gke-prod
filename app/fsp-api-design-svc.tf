@@ -74,7 +74,7 @@ resource "kubernetes_deployment_v1" "fsp_api_design_svc" {
 
             value_from {
               secret_key_ref {
-                name = "mongodb-secret"
+                name = kubernetes_secret_v1.mongodb_secret_forgesphere.metadata[0].name
                 key  = "MONGODB_URI"
               }
             }
@@ -85,7 +85,7 @@ resource "kubernetes_deployment_v1" "fsp_api_design_svc" {
 
             value_from {
               secret_key_ref {
-                name = "mongodb-secret"
+                name = kubernetes_secret_v1.mongodb_secret_forgesphere.metadata[0].name
                 key  = "MONGODB_CONFIG_DB"
               }
             }
@@ -151,34 +151,20 @@ resource "kubernetes_deployment_v1" "fsp_api_design_svc" {
       }
     }
   }
+
+  lifecycle {
+    ignore_changes = [
+      spec[0].template[0].spec[0].container[0].image,
+    ]
+  }
 }
 
-resource "kubectl_manifest" "fsp_api_design_backend" {
-  yaml_body = <<YAML
-apiVersion: cloud.google.com/v1
-kind: BackendConfig
-metadata:
-  name: fsp-api-design-backend
-  namespace: forgesphere-prod
-spec:
-  healthCheck:
-    requestPath: /api-design/actuator/health
-    port: 8080
-    type: HTTP
-YAML
-}
+# ✅ CLEAN SERVICE (NO NEG, NO BACKEND CONFIG)
 
 resource "kubernetes_service_v1" "fsp_api_design_svc" {
   metadata {
     name      = "fsp-api-design-svc"
     namespace = "forgesphere-prod"
-
-    annotations = {
-      "cloud.google.com/neg" = "{\"ingress\": true}"
-      "cloud.google.com/backend-config" = jsonencode({
-        default = "fsp-api-design-backend"
-      })
-    }
 
     labels = {
       app = "fsp-api-design-svc"
@@ -195,12 +181,6 @@ resource "kubernetes_service_v1" "fsp_api_design_svc" {
       target_port = 8080
     }
 
-    type = "NodePort"
-  }
-
-  lifecycle {
-    ignore_changes = [
-      metadata[0].annotations["cloud.google.com/neg-status"]
-    ]
+    type = "ClusterIP"
   }
 }

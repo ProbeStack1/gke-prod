@@ -40,7 +40,7 @@ resource "kubernetes_deployment_v1" "api_code_generator_ui" {
       }
 
       spec {
-       
+
         security_context {
           run_as_non_root = true
           run_as_user     = 101
@@ -60,7 +60,7 @@ resource "kubernetes_deployment_v1" "api_code_generator_ui" {
             container_port = 80
           }
 
-          
+
           security_context {
             run_as_non_root            = true
             run_as_user                = 101
@@ -73,7 +73,7 @@ resource "kubernetes_deployment_v1" "api_code_generator_ui" {
             }
           }
 
-         
+
           resources {
             requests = {
               cpu    = "10m"
@@ -85,7 +85,7 @@ resource "kubernetes_deployment_v1" "api_code_generator_ui" {
             }
           }
 
-          
+
           readiness_probe {
             http_get {
               path = "/"
@@ -136,6 +136,12 @@ resource "kubernetes_deployment_v1" "api_code_generator_ui" {
         }
       }
     }
+  }
+
+  lifecycle {
+    ignore_changes = [
+      spec[0].template[0].spec[0].container[0].image,
+    ]
   }
 }
 

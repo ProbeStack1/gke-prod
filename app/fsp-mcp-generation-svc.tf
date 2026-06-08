@@ -1,10 +1,10 @@
-resource "kubernetes_deployment_v1" "fsp_test_generation_svc" {
+resource "kubernetes_deployment_v1" "fsp_mcp_generation_svc" {
   metadata {
-    name      = "fsp-test-generation-svc"
+    name      = "fsp-mcp-generation-svc"
     namespace = "forgesphere-prod"
 
     labels = {
-      app = "fsp-test-generation-svc"
+      app = "fsp-mcp-generation-svc"
     }
   }
 
@@ -13,14 +13,14 @@ resource "kubernetes_deployment_v1" "fsp_test_generation_svc" {
 
     selector {
       match_labels = {
-        app = "fsp-test-generation-svc"
+        app = "fsp-mcp-generation-svc"
       }
     }
 
     template {
       metadata {
         labels = {
-          app = "fsp-test-generation-svc"
+          app = "fsp-mcp-generation-svc"
         }
       }
 
@@ -36,8 +36,8 @@ resource "kubernetes_deployment_v1" "fsp_test_generation_svc" {
         }
 
         container {
-          name  = "fsp-test-generation-svc"
-          image = var.fsp_test_generation_svc_image
+          name  = "fsp-mcp-generation-svc"
+          image = var.fsp_mcp_generation_svc_image
 
           port {
             container_port = 8080
@@ -56,7 +56,7 @@ resource "kubernetes_deployment_v1" "fsp_test_generation_svc" {
 
           env {
             name  = "SERVER_SERVLET_CONTEXT_PATH"
-            value = "/test"
+            value = "/mcp-generate/v1/api"
           }
 
           env {
@@ -119,7 +119,7 @@ resource "kubernetes_deployment_v1" "fsp_test_generation_svc" {
 
           readiness_probe {
             http_get {
-              path = "/test/actuator/health"
+              path = "/mcp-generate/v1/api/actuator/health"
               port = 8080
             }
             initial_delay_seconds = 30
@@ -159,23 +159,21 @@ resource "kubernetes_deployment_v1" "fsp_test_generation_svc" {
   }
 }
 
-# ❌ REMOVE BackendConfig (DO NOT KEEP)
+# ✅ CLEAN SERVICE (NO NEG, NO BACKEND CONFIG)
 
-# ✅ CLEAN SERVICE
-
-resource "kubernetes_service_v1" "fsp_test_generation_svc" {
+resource "kubernetes_service_v1" "fsp_mcp_generation_svc" {
   metadata {
-    name      = "fsp-test-generation-svc"
+    name      = "fsp-mcp-generation-svc"
     namespace = "forgesphere-prod"
 
     labels = {
-      app = "fsp-test-generation-svc"
+      app = "fsp-mcp-generation-svc"
     }
   }
 
   spec {
     selector = {
-      app = "fsp-test-generation-svc"
+      app = "fsp-mcp-generation-svc"
     }
 
     port {

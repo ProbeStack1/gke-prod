@@ -1,10 +1,9 @@
-resource "kubernetes_deployment_v1" "fsp_test_generation_svc" {
+resource "kubernetes_deployment_v1" "forgeshift_wso2_validation_service" {
   metadata {
-    name      = "fsp-test-generation-svc"
-    namespace = "forgesphere-prod"
-
+    name      = "forgeshift-wso2-validation-service"
+    namespace = "secure-production-app"
     labels = {
-      app = "fsp-test-generation-svc"
+      app = "forgeshift-wso2-validation-service"
     }
   }
 
@@ -13,14 +12,14 @@ resource "kubernetes_deployment_v1" "fsp_test_generation_svc" {
 
     selector {
       match_labels = {
-        app = "fsp-test-generation-svc"
+        app = "forgeshift-wso2-validation-service"
       }
     }
 
     template {
       metadata {
         labels = {
-          app = "fsp-test-generation-svc"
+          app = "forgeshift-wso2-validation-service"
         }
       }
 
@@ -36,11 +35,11 @@ resource "kubernetes_deployment_v1" "fsp_test_generation_svc" {
         }
 
         container {
-          name  = "fsp-test-generation-svc"
-          image = var.fsp_test_generation_svc_image
+          name  = "forgeshift-wso2-validation-service"
+          image = var.forgeshift_wso2_validation_service_image
 
           port {
-            container_port = 8080
+            container_port = 8085
           }
 
           security_context {
@@ -56,7 +55,7 @@ resource "kubernetes_deployment_v1" "fsp_test_generation_svc" {
 
           env {
             name  = "SERVER_SERVLET_CONTEXT_PATH"
-            value = "/test"
+            value = "/wso2/validation/v1"
           }
 
           env {
@@ -71,10 +70,9 @@ resource "kubernetes_deployment_v1" "fsp_test_generation_svc" {
 
           env {
             name = "MONGODB_URI"
-
             value_from {
               secret_key_ref {
-                name = kubernetes_secret_v1.mongodb_secret_forgesphere.metadata[0].name
+                name = kubernetes_secret_v1.mongodb_secret.metadata[0].name
                 key  = "MONGODB_URI"
               }
             }
@@ -82,10 +80,9 @@ resource "kubernetes_deployment_v1" "fsp_test_generation_svc" {
 
           env {
             name = "mongodb_config_db"
-
             value_from {
               secret_key_ref {
-                name = kubernetes_secret_v1.mongodb_secret_forgesphere.metadata[0].name
+                name = kubernetes_secret_v1.mongodb_secret.metadata[0].name
                 key  = "MONGODB_CONFIG_DB"
               }
             }
@@ -98,7 +95,6 @@ resource "kubernetes_deployment_v1" "fsp_test_generation_svc" {
 
           env {
             name = "SPRING_DATASOURCE_PASSWORD"
-
             value_from {
               secret_key_ref {
                 name = "cloudsql-db-secret"
@@ -117,25 +113,24 @@ resource "kubernetes_deployment_v1" "fsp_test_generation_svc" {
             value = "probestack-prod-db"
           }
 
-          readiness_probe {
-            http_get {
-              path = "/test/actuator/health"
-              port = 8080
-            }
-            initial_delay_seconds = 30
-            period_seconds        = 10
-          }
-
           resources {
             requests = {
               cpu    = "50m"
               memory = "300Mi"
             }
-
             limits = {
               cpu    = "1000m"
               memory = "1Gi"
             }
+          }
+
+          readiness_probe {
+            http_get {
+              path = "/wso2/validation/v1/actuator/health"
+              port = 8085
+            }
+            initial_delay_seconds = 30
+            period_seconds        = 10
           }
 
           volume_mount {
@@ -159,30 +154,56 @@ resource "kubernetes_deployment_v1" "fsp_test_generation_svc" {
   }
 }
 
-# ❌ REMOVE BackendConfig (DO NOT KEEP)
+resource "kubectl_manifest" "forgeshift_wso2_validation_service_backend_config" {
+  yaml_body = <<YAML
+apiVersion: cloud.google.com/v1
+kind: BackendConfig
+metadata:
+  name: forgeshift-wso2-validation-service-backend-config
+  namespace: secure-production-app
+spec:
+  timeoutSec: 300
+  healthCheck:
+    requestPath: /wso2/validation/v1/actuator/health
+    port: 8085
+    type: HTTP
+YAML
+}
 
-# ✅ CLEAN SERVICE
-
-resource "kubernetes_service_v1" "fsp_test_generation_svc" {
+resource "kubernetes_service_v1" "forgeshift_wso2_validation_service" {
   metadata {
-    name      = "fsp-test-generation-svc"
-    namespace = "forgesphere-prod"
+    name      = "forgeshift-wso2-validation-service"
+    namespace = "secure-production-app"
+
+    annotations = {
+      "cloud.google.com/neg" = "{\"ingress\": true}"
+      "cloud.google.com/backend-config" = jsonencode({
+        default = "forgeshift-wso2-validation-service-backend-config"
+      })
+    }
 
     labels = {
-      app = "fsp-test-generation-svc"
+      app = "forgeshift-wso2-validation-service"
     }
   }
 
   spec {
     selector = {
-      app = "fsp-test-generation-svc"
+      app = "forgeshift-wso2-validation-service"
     }
 
     port {
       port        = 80
-      target_port = 8080
+      target_port = 8085
     }
 
-    type = "ClusterIP"
+    type = "NodePort"
+  }
+
+  lifecycle {
+    ignore_changes = [
+      metadata[0].annotations["cloud.google.com/neg-status"]
+    ]
   }
 }
+

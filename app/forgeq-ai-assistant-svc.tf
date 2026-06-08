@@ -1,10 +1,10 @@
-resource "kubernetes_deployment_v1" "fsp_test_generation_svc" {
+resource "kubernetes_deployment_v1" "forgeq_ai_assistant_svc" {
   metadata {
-    name      = "fsp-test-generation-svc"
-    namespace = "forgesphere-prod"
+    name      = "forgeq-ai-assistant-svc"
+    namespace = "forgeq-prod"
 
     labels = {
-      app = "fsp-test-generation-svc"
+      app = "forgeq-ai-assistant-svc"
     }
   }
 
@@ -13,14 +13,14 @@ resource "kubernetes_deployment_v1" "fsp_test_generation_svc" {
 
     selector {
       match_labels = {
-        app = "fsp-test-generation-svc"
+        app = "forgeq-ai-assistant-svc"
       }
     }
 
     template {
       metadata {
         labels = {
-          app = "fsp-test-generation-svc"
+          app = "forgeq-ai-assistant-svc"
         }
       }
 
@@ -36,8 +36,8 @@ resource "kubernetes_deployment_v1" "fsp_test_generation_svc" {
         }
 
         container {
-          name  = "fsp-test-generation-svc"
-          image = var.fsp_test_generation_svc_image
+          name  = "forgeq-ai-assistant-svc"
+          image = var.forgeq_ai_assistant_svc_image
 
           port {
             container_port = 8080
@@ -56,7 +56,7 @@ resource "kubernetes_deployment_v1" "fsp_test_generation_svc" {
 
           env {
             name  = "SERVER_SERVLET_CONTEXT_PATH"
-            value = "/test"
+            value = "/api/v1/ai"
           }
 
           env {
@@ -74,7 +74,7 @@ resource "kubernetes_deployment_v1" "fsp_test_generation_svc" {
 
             value_from {
               secret_key_ref {
-                name = kubernetes_secret_v1.mongodb_secret_forgesphere.metadata[0].name
+                name = kubernetes_secret_v1.mongodb_secret_forgeq.metadata[0].name
                 key  = "MONGODB_URI"
               }
             }
@@ -85,7 +85,7 @@ resource "kubernetes_deployment_v1" "fsp_test_generation_svc" {
 
             value_from {
               secret_key_ref {
-                name = kubernetes_secret_v1.mongodb_secret_forgesphere.metadata[0].name
+                name = kubernetes_secret_v1.mongodb_secret_forgeq.metadata[0].name
                 key  = "MONGODB_CONFIG_DB"
               }
             }
@@ -119,7 +119,7 @@ resource "kubernetes_deployment_v1" "fsp_test_generation_svc" {
 
           readiness_probe {
             http_get {
-              path = "/test/actuator/health"
+              path = "/api/v1/ai/actuator/health"
               port = 8080
             }
             initial_delay_seconds = 30
@@ -159,23 +159,41 @@ resource "kubernetes_deployment_v1" "fsp_test_generation_svc" {
   }
 }
 
-# ❌ REMOVE BackendConfig (DO NOT KEEP)
+resource "kubectl_manifest" "forgeq_ai_assistant_backend" {
+  yaml_body = <<YAML
+apiVersion: cloud.google.com/v1
+kind: BackendConfig
+metadata:
+  name: forgeq-ai-assistant-backend
+  namespace: forgeq-prod
+spec:
+  healthCheck:
+    requestPath: /api/v1/ai/actuator/health
+    port: 8080
+    type: HTTP
+YAML
+}
 
-# ✅ CLEAN SERVICE
-
-resource "kubernetes_service_v1" "fsp_test_generation_svc" {
+resource "kubernetes_service_v1" "forgeq_ai_assistant_svc" {
   metadata {
-    name      = "fsp-test-generation-svc"
-    namespace = "forgesphere-prod"
+    name      = "forgeq-ai-assistant-svc"
+    namespace = "forgeq-prod"
+
+    annotations = {
+      "cloud.google.com/neg" = "{\"ingress\": true}"
+      "cloud.google.com/backend-config" = jsonencode({
+        default = "forgeq-ai-assistant-backend"
+      })
+    }
 
     labels = {
-      app = "fsp-test-generation-svc"
+      app = "forgeq-ai-assistant-svc"
     }
   }
 
   spec {
     selector = {
-      app = "fsp-test-generation-svc"
+      app = "forgeq-ai-assistant-svc"
     }
 
     port {

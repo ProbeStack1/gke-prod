@@ -1,10 +1,11 @@
-resource "kubernetes_deployment_v1" "fsp_test_generation_svc" {
+resource "kubernetes_deployment_v1" "fsp_apigee_wrapper_svc" {
+
   metadata {
-    name      = "fsp-test-generation-svc"
+    name      = "fsp-apigee-wrapper-svc"
     namespace = "forgesphere-prod"
 
     labels = {
-      app = "fsp-test-generation-svc"
+      app = "fsp-apigee-wrapper-svc"
     }
   }
 
@@ -13,18 +14,20 @@ resource "kubernetes_deployment_v1" "fsp_test_generation_svc" {
 
     selector {
       match_labels = {
-        app = "fsp-test-generation-svc"
+        app = "fsp-apigee-wrapper-svc"
       }
     }
 
     template {
+
       metadata {
         labels = {
-          app = "fsp-test-generation-svc"
+          app = "fsp-apigee-wrapper-svc"
         }
       }
 
       spec {
+
         security_context {
           run_as_non_root = true
           run_as_user     = 1001
@@ -36,11 +39,14 @@ resource "kubernetes_deployment_v1" "fsp_test_generation_svc" {
         }
 
         container {
-          name  = "fsp-test-generation-svc"
-          image = var.fsp_test_generation_svc_image
+          name  = "fsp-apigee-wrapper-svc"
+          image = var.fsp_apigee_wrapper_svc_image
 
+          ########################################
+          # FIXED: App runs on port 3000
+          ########################################
           port {
-            container_port = 8080
+            container_port = 3000
           }
 
           security_context {
@@ -56,7 +62,7 @@ resource "kubernetes_deployment_v1" "fsp_test_generation_svc" {
 
           env {
             name  = "SERVER_SERVLET_CONTEXT_PATH"
-            value = "/test"
+            value = "/apigee-wrapper"
           }
 
           env {
@@ -117,16 +123,22 @@ resource "kubernetes_deployment_v1" "fsp_test_generation_svc" {
             value = "probestack-prod-db"
           }
 
+          ########################################
+          # FIXED: Readiness probe on port 3000
+          ########################################
           readiness_probe {
+
             http_get {
-              path = "/test/actuator/health"
-              port = 8080
+              path = "/apigee-wrapper/health"
+              port = 3000
             }
+
             initial_delay_seconds = 30
             period_seconds        = 10
           }
 
           resources {
+
             requests = {
               cpu    = "50m"
               memory = "300Mi"
@@ -146,6 +158,7 @@ resource "kubernetes_deployment_v1" "fsp_test_generation_svc" {
 
         volume {
           name = "tmp"
+
           empty_dir {}
         }
       }
@@ -159,28 +172,33 @@ resource "kubernetes_deployment_v1" "fsp_test_generation_svc" {
   }
 }
 
-# ❌ REMOVE BackendConfig (DO NOT KEEP)
+########################################
+# SERVICE
+########################################
 
-# ✅ CLEAN SERVICE
+resource "kubernetes_service_v1" "fsp_apigee_wrapper_svc" {
 
-resource "kubernetes_service_v1" "fsp_test_generation_svc" {
   metadata {
-    name      = "fsp-test-generation-svc"
+    name      = "fsp-apigee-wrapper-svc"
     namespace = "forgesphere-prod"
 
     labels = {
-      app = "fsp-test-generation-svc"
+      app = "fsp-apigee-wrapper-svc"
     }
   }
 
   spec {
+
     selector = {
-      app = "fsp-test-generation-svc"
+      app = "fsp-apigee-wrapper-svc"
     }
 
+    ########################################
+    # FIXED: target_port -> 3000
+    ########################################
     port {
       port        = 80
-      target_port = 8080
+      target_port = 3000
     }
 
     type = "ClusterIP"

@@ -153,6 +153,12 @@ resource "kubernetes_deployment_v1" "react_admin" {
       }
     }
   }
+
+  lifecycle {
+    ignore_changes = [
+      spec[0].template[0].spec[0].container[0].image,
+    ]
+  }
 }
 
 ############################################
@@ -171,7 +177,7 @@ resource "kubernetes_service_v1" "react_admin" {
       # CRITICAL: Enable Container-Native Load Balancing (NEG)
       # This allows the Load Balancer to talk directly to Pod IP:80
       "cloud.google.com/neg" = "{\"ingress\": true}"
-      
+
       "cloud.google.com/backend-config" = jsonencode({
         ports = {
           "80" = "react-admin-backend-config"

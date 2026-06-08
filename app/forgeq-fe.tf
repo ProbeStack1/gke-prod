@@ -25,7 +25,7 @@ resource "kubernetes_deployment_v1" "forgeq_fe" {
       }
 
       spec {
-        
+
         security_context {
           run_as_non_root = true
           run_as_user     = 101
@@ -118,6 +118,12 @@ resource "kubernetes_deployment_v1" "forgeq_fe" {
         }
       }
     }
+  }
+
+  lifecycle {
+    ignore_changes = [
+      spec[0].template[0].spec[0].container[0].image,
+    ]
   }
 }
 

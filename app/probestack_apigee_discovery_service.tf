@@ -73,7 +73,7 @@ resource "kubernetes_deployment_v1" "probestack_apigee_discovery_service" {
             name = "MONGODB_URI"
             value_from {
               secret_key_ref {
-                name = "mongodb-secret"
+                name = kubernetes_secret_v1.mongodb_secret.metadata[0].name
                 key  = "MONGODB_URI"
               }
             }
@@ -83,7 +83,7 @@ resource "kubernetes_deployment_v1" "probestack_apigee_discovery_service" {
             name = "mongodb_config_db"
             value_from {
               secret_key_ref {
-                name = "mongodb-secret"
+                name = kubernetes_secret_v1.mongodb_secret.metadata[0].name
                 key  = "MONGODB_CONFIG_DB"
               }
             }
@@ -146,6 +146,12 @@ resource "kubernetes_deployment_v1" "probestack_apigee_discovery_service" {
         }
       }
     }
+  }
+
+  lifecycle {
+    ignore_changes = [
+      spec[0].template[0].spec[0].container[0].image,
+    ]
   }
 }
 

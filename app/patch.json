@@ -1,7 +1,23 @@
 {
   "spec": {
-    "urlRewrite": {
-      "pathPrefixRewrite": "/"
+    "template": {
+      "spec": {
+        "containers": [
+          {
+            "name": "forgeshift-wso2-assessment-service",
+            "image": "us-central1-docker.pkg.dev/probestack-prod/probestack-prod-apps/forgeshift-wso2-assessment-service:ab275868a138d0d3b4a9d84a5b32747878dcf113",
+            "ports": [{"containerPort": 8084}],
+            "readinessProbe": {
+              "httpGet": {
+                "path": "/wso2/assessment/v1/actuator/health",
+                "port": 8084
+              },
+              "initialDelaySeconds": 30,
+              "periodSeconds": 10
+            }
+          }
+        ]
+      }
     }
   }
 }

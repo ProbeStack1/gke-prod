@@ -1,10 +1,10 @@
-resource "kubernetes_deployment_v1" "fsp_test_generation_svc" {
+resource "kubernetes_deployment_v1" "fsp_compliance_svc" {
   metadata {
-    name      = "fsp-test-generation-svc"
+    name      = "fsp-compliance-svc"
     namespace = "forgesphere-prod"
 
     labels = {
-      app = "fsp-test-generation-svc"
+      app = "fsp-compliance-svc"
     }
   }
 
@@ -13,14 +13,14 @@ resource "kubernetes_deployment_v1" "fsp_test_generation_svc" {
 
     selector {
       match_labels = {
-        app = "fsp-test-generation-svc"
+        app = "fsp-compliance-svc"
       }
     }
 
     template {
       metadata {
         labels = {
-          app = "fsp-test-generation-svc"
+          app = "fsp-compliance-svc"
         }
       }
 
@@ -36,8 +36,8 @@ resource "kubernetes_deployment_v1" "fsp_test_generation_svc" {
         }
 
         container {
-          name  = "fsp-test-generation-svc"
-          image = var.fsp_test_generation_svc_image
+          name  = "fsp-compliance-svc"
+          image = var.fsp_compliance_svc_image
 
           port {
             container_port = 8080
@@ -56,7 +56,7 @@ resource "kubernetes_deployment_v1" "fsp_test_generation_svc" {
 
           env {
             name  = "SERVER_SERVLET_CONTEXT_PATH"
-            value = "/test"
+            value = "/compliance-api"
           }
 
           env {
@@ -119,7 +119,7 @@ resource "kubernetes_deployment_v1" "fsp_test_generation_svc" {
 
           readiness_probe {
             http_get {
-              path = "/test/actuator/health"
+              path = "/compliance-api/actuator/health"
               port = 8080
             }
             initial_delay_seconds = 30
@@ -163,19 +163,19 @@ resource "kubernetes_deployment_v1" "fsp_test_generation_svc" {
 
 # ✅ CLEAN SERVICE
 
-resource "kubernetes_service_v1" "fsp_test_generation_svc" {
+resource "kubernetes_service_v1" "fsp_compliance_svc" {
   metadata {
-    name      = "fsp-test-generation-svc"
+    name      = "fsp-compliance-svc"
     namespace = "forgesphere-prod"
 
     labels = {
-      app = "fsp-test-generation-svc"
+      app = "fsp-compliance-svc"
     }
   }
 
   spec {
     selector = {
-      app = "fsp-test-generation-svc"
+      app = "fsp-compliance-svc"
     }
 
     port {

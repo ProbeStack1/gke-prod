@@ -5,7 +5,7 @@ metadata:
   namespace: forgesphere-prod
 spec:
   rules:
-    - host: prod.forgesphere.probestack.io
+    - host: forgesphere.probestack.io
       http:
         paths:
           - path: /

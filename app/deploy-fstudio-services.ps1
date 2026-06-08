@@ -21,6 +21,7 @@ function Deploy-Service {
 $services = @(
     "fs_apispec_svc",
     "fs_apiwizard_svc",
+    "fs_collaboration_svc",
     "fs_project_svc"
 )
 
