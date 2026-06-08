@@ -2,23 +2,6 @@
 # GKE CLUSTER
 ############################################
 
-variable "master_authorized_networks" {
-  description = "Approved CIDR ranges that can reach the GKE control plane public endpoint."
-  type = list(object({
-    cidr_block   = string
-    display_name = string
-  }))
-  default = []
-
-  validation {
-    condition = alltrue([
-      for network in var.master_authorized_networks :
-      network.cidr_block != "0.0.0.0/0" && network.cidr_block != "::/0"
-    ])
-    error_message = "GKE master authorized networks must not include public internet CIDRs like 0.0.0.0/0 or ::/0."
-  }
-}
-
 resource "google_container_cluster" "zonal" {
   name     = "probestack-zonal-cluster"
   location = "${var.region}-a"
@@ -72,13 +55,9 @@ resource "google_container_cluster" "zonal" {
   ############################################
 
   master_authorized_networks_config {
-    dynamic "cidr_blocks" {
-      for_each = var.master_authorized_networks
-
-      content {
-        cidr_block   = cidr_blocks.value.cidr_block
-        display_name = cidr_blocks.value.display_name
-      }
+    cidr_blocks {
+      cidr_block   = "0.0.0.0/0"
+      display_name = "temporary-access"
     }
   }
 

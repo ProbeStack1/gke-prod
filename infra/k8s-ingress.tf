@@ -92,7 +92,7 @@ resource "kubernetes_ingress_v1" "prod_ingress" {
       "kubernetes.io/ingress.global-static-ip-name" = google_compute_global_address.prod_ip.name
       "networking.gke.io/managed-certificates"      = "probestack-prod-cert,probestack-cert,forgeshift-cert-v2"
       "networking.gke.io/frontend-config"           = "prod-frontend-config"
-      "kubernetes.io/ingress.allow-http"            = "false"
+      "kubernetes.io/ingress.allow-http"            = "true"
     }
   }
 
@@ -453,7 +453,7 @@ resource "kubernetes_ingress_v1" "forgeq_ingress" {
       "kubernetes.io/ingress.global-static-ip-name" = google_compute_global_address.forgeq_ip.name
       "networking.gke.io/managed-certificates"      = "forgeq-cert-v4"
       "networking.gke.io/frontend-config"           = "forgeq-frontend-config"
-      "kubernetes.io/ingress.allow-http"            = "false"
+      "kubernetes.io/ingress.allow-http"            = "true"
     }
   }
 
@@ -1470,7 +1470,7 @@ resource "kubernetes_ingress_v1" "forgestudio_ingress" {
       "kubernetes.io/ingress.global-static-ip-name" = google_compute_global_address.forgestudio_ip.name
       "networking.gke.io/managed-certificates"      = "forgestudio-cert-v6"
       "networking.gke.io/frontend-config"           = "forgestudio-frontend-config"
-      "kubernetes.io/ingress.allow-http"            = "false"
+      "kubernetes.io/ingress.allow-http"            = "true"
     }
   }
 
