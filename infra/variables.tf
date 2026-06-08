@@ -14,7 +14,7 @@ variable "region" {
 variable "environment" {
   description = "Deployment environment"
   type        = string
-  default     = "prod"
+  default     = "dev"
 }
 
 # NETWORK
@@ -22,25 +22,25 @@ variable "environment" {
 variable "vpc_name" {
   description = "The name of the VPC network"
   type        = string
-  default     = "probestack-prod-vpc"
+  default     = "probestack-dev-vpc"
 }
 
 variable "subnet_name" {
   description = "The name of the GKE subnet"
   type        = string
-  default     = "probestack-prod-subnet"
+  default     = "probestack-dev-subnet"
 }
 
 variable "router_name" {
   description = "Name of the Cloud Router"
   type        = string
-  default     = "probestack-prod-router"
+  default     = "probestack-dev-router"
 }
 
 variable "nat_name" {
   description = "Name of the Cloud NAT"
   type        = string
-  default     = "probestack-prod-nat"
+  default     = "probestack-dev-nat"
 }
 
 variable "psa_range_name" {
@@ -54,7 +54,7 @@ variable "psa_range_name" {
 variable "cluster_name" {
   description = "Name of the GKE cluster"
   type        = string
-  default     = "probestack-zonal-cluster"
+  default     = "probestack-dev-cluster"
 }
 
 variable "node_pool_name" {
@@ -74,57 +74,57 @@ variable "node_service_account" {
 variable "artifact_repo_name" {
   description = "The name of the artifact registry repository"
   type        = string
-  default     = "probestack-prod-apps"
+  default     = "probestack-dev-apps"
 }
 
 # INGRESS DOMAINS
 
 variable "domain_name" {
-  description = "Primary production domain"
+  description = "Primary dev domain"
   type        = string
-  default     = "prod.probestack.io"
+  default     = "dev.probestack.io"
 }
 
 variable "forgeq_domain" {
   description = "Domain for forgeq namespace"
   type        = string
-  default     = "prod.forgeq.probestack.io"
+  default     = "dev.forgeq.probestack.io"
 }
 
 variable "forgestudio_domain" {
   description = "Domain for forgestudio namespace"
   type        = string
-  default     = "prod.forgestudio.probestack.io"
+  default     = "dev.forgestudio.probestack.io"
 }
 
 variable "forgeshift_domain" {
   description = "Domain for forgeshift namespace"
   type        = string
-  default     = "forgeshift.probestack.io"
+  default     = "dev.forgeshift.probestack.io"
 }
 
 variable "forgesphere_domain" {
   description = "Domain for forgesphere namespace"
   type        = string
-  default     = "prod.forgesphere.probestack.io"
+  default     = "dev.forgesphere.probestack.io"
 }
 
 variable "forgeai_domain" {
   description = "Domain for forgeai namespace"
   type        = string
-  default     = "prod.forgeai.probestack.io"
+  default     = "dev.forgeai.probestack.io"
 }
 
 variable "forgehub_domain" {
   description = "Domain for forgehub namespace"
   type        = string
-  default     = "prod.forgehub.probestack.io"
+  default     = "dev.forgehub.probestack.io"
 }
 
 variable "forgekonnect_domain" {
   description = "Domain for forgekonnect namespace"
   type        = string
-  default     = "prod.forgekonnect.probestack.io"
+  default     = "dev.forgekonnect.probestack.io"
 }
 
 
@@ -133,7 +133,7 @@ variable "forgekonnect_domain" {
 variable "db_instance_name" {
   description = "The name of the Cloud SQL instance"
   type        = string
-  default     = "probestack-mysql-prod"
+  default     = "probestack-mysql-nonprod"
 }
 
 variable "db_tier" {
@@ -145,7 +145,7 @@ variable "db_tier" {
 variable "db_user" {
   description = "The database admin username"
   type        = string
-  default     = "probestack_prod_admin"
+  default     = "probestack_dev_admin"
 }
 
 variable "db_password" {

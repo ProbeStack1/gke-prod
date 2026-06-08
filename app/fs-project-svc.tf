@@ -1,7 +1,7 @@
 resource "kubernetes_deployment_v1" "fs_project_svc" {
   metadata {
     name      = "fs-project-svc"
-    namespace = "forgestudio-prod"
+    namespace = "forgestudio-dev"
 
     labels = {
       app = "fs-project-svc"
@@ -109,12 +109,12 @@ resource "kubernetes_deployment_v1" "fs_project_svc" {
 
           env {
             name  = "SPRING_CLOUD_GCP_SQL_INSTANCE_CONNECTION_NAME"
-            value = "${var.project_id}:${var.region}:probestack-mysql-prod"
+            value = "${var.project_id}:${var.region}:probestack-mysql-dev"
           }
 
           env {
             name  = "SPRING_CLOUD_GCP_SQL_DATABASE_NAME"
-            value = "probestack-prod-db"
+            value = "probestack-dev-db"
           }
 
           readiness_probe {
@@ -159,7 +159,7 @@ apiVersion: cloud.google.com/v1
 kind: BackendConfig
 metadata:
   name: fs-project-backend
-  namespace: forgestudio-prod
+  namespace: forgestudio-dev
 spec:
   healthCheck:
     requestPath: /api/v1/projects/actuator/health
@@ -171,7 +171,7 @@ YAML
 resource "kubernetes_service_v1" "fs_project_svc" {
   metadata {
     name      = "fs-project-svc"
-    namespace = "forgestudio-prod"
+    namespace = "forgestudio-dev"
 
     annotations = {
       "cloud.google.com/neg" = "{\"ingress\": true}"

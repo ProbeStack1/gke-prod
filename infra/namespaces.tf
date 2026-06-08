@@ -1,9 +1,9 @@
-resource "kubernetes_namespace" "production" {
+resource "kubernetes_namespace" "dev" {
   metadata {
-    name = "secure-production-app"
+    name = "probestack-dev"
 
     labels = {
-      environment = "production"
+      environment = "dev"
       tier        = "backend"
 
       "pod-security.kubernetes.io/enforce"         = "restricted"
@@ -20,10 +20,10 @@ resource "kubernetes_namespace" "production" {
 
 resource "kubernetes_namespace" "forgeq" {
   metadata {
-    name = "forgeq-prod"
+    name = "forgeq-dev"
 
     labels = {
-      environment = "production"
+      environment = "dev"
       tier        = "backend"
 
       "pod-security.kubernetes.io/enforce"         = "restricted"
@@ -37,10 +37,10 @@ resource "kubernetes_namespace" "forgeq" {
 
 resource "kubernetes_namespace" "forgeshift" {
   metadata {
-    name = "forgeshift-prod"
+    name = "forgeshift-dev"
 
     labels = {
-      environment = "production"
+      environment = "dev"
       tier        = "backend"
 
       "pod-security.kubernetes.io/enforce"         = "restricted"
@@ -54,10 +54,10 @@ resource "kubernetes_namespace" "forgeshift" {
 
 resource "kubernetes_namespace" "forgestudio" {
   metadata {
-    name = "forgestudio-prod"
+    name = "forgestudio-dev"
 
     labels = {
-      environment = "production"
+      environment = "dev"
       tier        = "backend"
 
       "pod-security.kubernetes.io/enforce"         = "restricted"
@@ -70,10 +70,10 @@ resource "kubernetes_namespace" "forgestudio" {
 
 resource "kubernetes_namespace" "forgesphere" {
   metadata {
-    name = "forgesphere-prod"
+    name = "forgesphere-dev"
 
     labels = {
-      environment = "production"
+      environment = "dev"
       tier        = "backend"
 
       "pod-security.kubernetes.io/enforce"         = "restricted"
@@ -86,10 +86,10 @@ resource "kubernetes_namespace" "forgesphere" {
 
 resource "kubernetes_namespace" "forgeai" {
   metadata {
-    name = "forgeai-prod"
+    name = "forgeai-dev"
 
     labels = {
-      environment = "production"
+      environment = "dev"
       tier        = "backend"
 
       "pod-security.kubernetes.io/enforce"         = "restricted"
@@ -102,10 +102,10 @@ resource "kubernetes_namespace" "forgeai" {
 
 resource "kubernetes_namespace" "forgekonnect" {
   metadata {
-    name = "forgekonnect-prod"
+    name = "forgekonnect-dev"
 
     labels = {
-      environment = "production"
+      environment = "dev"
       tier        = "backend"
 
       "pod-security.kubernetes.io/enforce"         = "restricted"
@@ -118,10 +118,10 @@ resource "kubernetes_namespace" "forgekonnect" {
 
 resource "kubernetes_namespace" "forgehub" {
   metadata {
-    name = "forgehub-prod"
+    name = "forgehub-dev"
 
     labels = {
-      environment = "production"
+      environment = "dev"
       tier        = "backend"
 
       "pod-security.kubernetes.io/enforce"         = "restricted"

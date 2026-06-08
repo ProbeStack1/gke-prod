@@ -1,6 +1,6 @@
 terraform {
   backend "gcs" {
-    bucket = "probestack-prod-tf-state-prod"
-    prefix = "gke-prod/infra"
+    bucket = "probestack-dev-tf-state"
+    prefix = "gke-dev/infra"
   }
 }

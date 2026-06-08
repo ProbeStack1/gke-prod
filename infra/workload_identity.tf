@@ -18,14 +18,14 @@ resource "google_project_iam_member" "app_sa_storage" {
 
 locals {
   wi_namespaces = [
-    "secure-production-app",
-    "forgeq-prod",
-    "forgeshift-prod",
-    "forgestudio-prod",
-    "forgesphere-prod",
-    "forgeai-prod",
-    "forgekonnect-prod",
-    "forgehub-prod"
+    "probestack-dev",
+    "forgeq-dev",
+    "forgeshift-dev",
+    "forgestudio-dev",
+    "forgesphere-dev",
+    "forgeai-dev",
+    "forgekonnect-dev",
+    "forgehub-dev"
   ]
 }
 
@@ -58,7 +58,7 @@ resource "kubernetes_annotations" "default_sa_annotation" {
   }
 
   depends_on = [
-    kubernetes_namespace.production,
+    kubernetes_namespace.dev,
     kubernetes_namespace.forgeq,
     kubernetes_namespace.forgeshift,
     kubernetes_namespace.forgestudio,

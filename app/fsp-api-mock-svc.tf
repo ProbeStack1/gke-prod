@@ -1,7 +1,7 @@
 resource "kubernetes_deployment_v1" "fsp_api_mock_svc" {
   metadata {
     name      = "fsp-api-mock-svc"
-    namespace = "forgesphere-prod"
+    namespace = "forgesphere-dev"
 
     labels = {
       app = "fsp-api-mock-svc"
@@ -109,12 +109,12 @@ resource "kubernetes_deployment_v1" "fsp_api_mock_svc" {
 
           env {
             name  = "SPRING_CLOUD_GCP_SQL_INSTANCE_CONNECTION_NAME"
-            value = "${var.project_id}:${var.region}:probestack-mysql-prod"
+            value = "${var.project_id}:${var.region}:probestack-mysql-dev"
           }
 
           env {
             name  = "SPRING_CLOUD_GCP_SQL_DATABASE_NAME"
-            value = "probestack-prod-db"
+            value = "probestack-dev-db"
           }
 
           readiness_probe {
@@ -153,32 +153,14 @@ resource "kubernetes_deployment_v1" "fsp_api_mock_svc" {
   }
 }
 
-resource "kubectl_manifest" "fsp_api_mock_backend" {
-  yaml_body = <<YAML
-apiVersion: cloud.google.com/v1
-kind: BackendConfig
-metadata:
-  name: fsp-api-mock-backend
-  namespace: forgesphere-prod
-spec:
-  healthCheck:
-    requestPath: /mock-api/actuator/health
-    port: 8080
-    type: HTTP
-YAML
-}
+# ❌ REMOVED BackendConfig resource (DO NOT KEEP IT)
+
+# ✅ CLEAN SERVICE
 
 resource "kubernetes_service_v1" "fsp_api_mock_svc" {
   metadata {
     name      = "fsp-api-mock-svc"
-    namespace = "forgesphere-prod"
-
-    annotations = {
-      "cloud.google.com/neg" = "{\"ingress\": true}"
-      "cloud.google.com/backend-config" = jsonencode({
-        default = "fsp-api-mock-backend"
-      })
-    }
+    namespace = "forgesphere-dev"
 
     labels = {
       app = "fsp-api-mock-svc"
@@ -195,12 +177,6 @@ resource "kubernetes_service_v1" "fsp_api_mock_svc" {
       target_port = 8080
     }
 
-    type = "NodePort"
-  }
-
-  lifecycle {
-    ignore_changes = [
-      metadata[0].annotations["cloud.google.com/neg-status"]
-    ]
+    type = "ClusterIP"
   }
 }

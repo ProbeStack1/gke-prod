@@ -3,7 +3,7 @@
 ############################################
 
 resource "google_container_cluster" "zonal" {
-  name     = "probestack-zonal-cluster"
+  name     = "probestack-dev-cluster"
   location = "${var.region}-a"
 
   network    = google_compute_network.vpc.id

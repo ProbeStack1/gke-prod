@@ -25,7 +25,7 @@ resource "google_project_iam_member" "admin_backend_cloudsql" {
 resource "kubernetes_service_account" "admin_backend_ksa" {
   metadata {
     name      = "admin-backend-ksa"
-    namespace = "secure-production-app"
+    namespace = "probestack-dev"
 
     annotations = {
       "iam.gke.io/gcp-service-account" = google_service_account.admin_backend_gsa.email
@@ -41,5 +41,5 @@ resource "google_service_account_iam_member" "admin_backend_workload_identity" {
   service_account_id = google_service_account.admin_backend_gsa.name
   role               = "roles/iam.workloadIdentityUser"
 
-  member = "serviceAccount:${var.project_id}.svc.id.goog[secure-production-app/admin-backend-ksa]"
+  member = "serviceAccount:${var.project_id}.svc.id.goog[probestack-dev/admin-backend-ksa]"
 }

@@ -1,7 +1,7 @@
 resource "kubernetes_deployment_v1" "forgekonnect_fe" {
   metadata {
     name      = "forgekonnect-fe"
-    namespace = "forgekonnect-prod"
+    namespace = "forgekonnect-dev"
 
     labels = {
       app = "forgekonnect-fe"
@@ -25,7 +25,7 @@ resource "kubernetes_deployment_v1" "forgekonnect_fe" {
       }
 
       spec {
-        
+
         security_context {
           run_as_non_root = true
           run_as_user     = 101
@@ -38,7 +38,7 @@ resource "kubernetes_deployment_v1" "forgekonnect_fe" {
 
         container {
           name  = "forgekonnect-fe"
-          image = var.react_vite_image
+          image = var.forgekonnect_fe_image
 
           port {
             container_port = 80
@@ -124,7 +124,7 @@ resource "kubernetes_deployment_v1" "forgekonnect_fe" {
 resource "kubernetes_service_v1" "forgekonnect_fe" {
   metadata {
     name      = "forgekonnect-fe"
-    namespace = "forgekonnect-prod"
+    namespace = "forgekonnect-dev"
 
     labels = {
       app = "forgekonnect-fe"
@@ -145,7 +145,7 @@ resource "kubernetes_service_v1" "forgekonnect_fe" {
       target_port = 80
     }
 
-    type = "NodePort"
+    type = "ClusterIP"
   }
 
   lifecycle {

@@ -1,7 +1,7 @@
 resource "kubernetes_deployment_v1" "forgeq_fe" {
   metadata {
     name      = "forgeq-fe"
-    namespace = "forgeq-prod"
+    namespace = "forgeq-dev"
 
     labels = {
       app = "forgeq-fe"
@@ -25,7 +25,7 @@ resource "kubernetes_deployment_v1" "forgeq_fe" {
       }
 
       spec {
-        
+
         security_context {
           run_as_non_root = true
           run_as_user     = 101
@@ -124,7 +124,7 @@ resource "kubernetes_deployment_v1" "forgeq_fe" {
 resource "kubernetes_service_v1" "forgeq_fe" {
   metadata {
     name      = "forgeq-fe"
-    namespace = "forgeq-prod"
+    namespace = "forgeq-dev"
 
     labels = {
       app = "forgeq-fe"

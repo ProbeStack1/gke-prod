@@ -1,7 +1,7 @@
 resource "kubernetes_deployment_v1" "forgehub_fe" {
   metadata {
     name      = "forgehub-fe"
-    namespace = "forgehub-prod"
+    namespace = "forgehub-dev"
 
     labels = {
       app = "forgehub-fe"
@@ -25,7 +25,7 @@ resource "kubernetes_deployment_v1" "forgehub_fe" {
       }
 
       spec {
-        
+
         security_context {
           run_as_non_root = true
           run_as_user     = 101
@@ -38,7 +38,7 @@ resource "kubernetes_deployment_v1" "forgehub_fe" {
 
         container {
           name  = "forgehub-fe"
-          image = var.react_vite_image
+          image = var.forgehub_fe_image
 
           port {
             container_port = 80
@@ -124,7 +124,7 @@ resource "kubernetes_deployment_v1" "forgehub_fe" {
 resource "kubernetes_service_v1" "forgehub_fe" {
   metadata {
     name      = "forgehub-fe"
-    namespace = "forgehub-prod"
+    namespace = "forgehub-dev"
 
     labels = {
       app = "forgehub-fe"
@@ -145,7 +145,7 @@ resource "kubernetes_service_v1" "forgehub_fe" {
       target_port = 80
     }
 
-    type = "NodePort"
+    type = "ClusterIP"
   }
 
   lifecycle {

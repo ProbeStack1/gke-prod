@@ -15,7 +15,7 @@ function Deploy-Service {
     terraform apply -auto-approve -target="kubectl_manifest.$backend"
 
     # Wait for rollout (IMPORTANT)
-    kubectl rollout status deployment $name -n forgeai-prod
+    kubectl rollout status deployment $name -n forgeai-dev
 }
 
 $services = @(
@@ -30,6 +30,6 @@ Write-Host "----------------------------------------" -ForegroundColor Green
 Write-Host "All forgeai services deployed successfully!" -ForegroundColor Green
 
 Write-Host "Checking Kubernetes resources..." -ForegroundColor Cyan
-kubectl get pods -n forgeai-prod
-kubectl get svc -n forgeai-prod
+kubectl get pods -n forgeai-dev
+kubectl get svc -n forgeai-dev
 

@@ -1,7 +1,7 @@
 resource "kubernetes_deployment_v1" "forgestudio_fe" {
   metadata {
     name      = "forgestudio-fe"
-    namespace = "forgestudio-prod"
+    namespace = "forgestudio-dev"
 
     labels = {
       app = "forgestudio-fe"
@@ -25,7 +25,7 @@ resource "kubernetes_deployment_v1" "forgestudio_fe" {
       }
 
       spec {
-        
+
         security_context {
           run_as_non_root = true
           run_as_user     = 101
@@ -124,7 +124,7 @@ resource "kubernetes_deployment_v1" "forgestudio_fe" {
 resource "kubernetes_service_v1" "forgestudio_fe" {
   metadata {
     name      = "forgestudio-fe"
-    namespace = "forgestudio-prod"
+    namespace = "forgestudio-dev"
 
     labels = {
       app = "forgestudio-fe"

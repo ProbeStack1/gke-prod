@@ -1,7 +1,7 @@
 resource "kubernetes_deployment_v1" "react_vite" {
   metadata {
     name      = "react-vite"
-    namespace = "secure-production-app"
+    namespace = "probestack-dev"
     labels = {
       app = "react-vite"
     }
@@ -119,7 +119,7 @@ resource "kubernetes_deployment_v1" "react_vite" {
 resource "kubernetes_service_v1" "react_vite" {
   metadata {
     name      = "react-vite"
-    namespace = "secure-production-app"
+    namespace = "probestack-dev"
     labels = {
       app = "react-vite"
     }

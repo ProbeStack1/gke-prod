@@ -7,7 +7,7 @@ apiVersion: cloud.google.com/v1
 kind: BackendConfig
 metadata:
   name: react-admin-backend-config
-  namespace: secure-production-app
+  namespace: probestack-dev
 spec:
   healthCheck:
     port: 80
@@ -24,7 +24,7 @@ YAML
 resource "kubernetes_deployment_v1" "react_admin" {
   metadata {
     name      = "react-admin"
-    namespace = "secure-production-app"
+    namespace = "probestack-dev"
 
     labels = {
       app = "react-admin"
@@ -161,7 +161,7 @@ resource "kubernetes_deployment_v1" "react_admin" {
 resource "kubernetes_service_v1" "react_admin" {
   metadata {
     name      = "react-admin"
-    namespace = "secure-production-app"
+    namespace = "probestack-dev"
 
     labels = {
       app = "react-admin"
@@ -171,7 +171,7 @@ resource "kubernetes_service_v1" "react_admin" {
       # CRITICAL: Enable Container-Native Load Balancing (NEG)
       # This allows the Load Balancer to talk directly to Pod IP:80
       "cloud.google.com/neg" = "{\"ingress\": true}"
-      
+
       "cloud.google.com/backend-config" = jsonencode({
         ports = {
           "80" = "react-admin-backend-config"

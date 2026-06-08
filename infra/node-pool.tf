@@ -34,7 +34,7 @@ resource "google_container_node_pool" "zonal_main" {
     disk_type    = "pd-standard"
 
     labels = {
-      environment = "production"
+      environment = "dev"
       tier        = "app"
       nodepool    = "zonal"
     }

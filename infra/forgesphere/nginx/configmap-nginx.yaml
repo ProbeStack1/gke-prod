@@ -2,53 +2,122 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: nginx-config
-  namespace: forgesphere-prod
+  namespace: forgestudio-dev
 data:
   nginx.conf: |
     events {}
 
     http {
+
+      ########################################
+      # COMMON PROXY SETTINGS
+      ########################################
+      proxy_set_header Host $host;
+      proxy_set_header X-Real-IP $remote_addr;
+      proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+      proxy_set_header X-Forwarded-Proto $scheme;
+
+      ########################################
+      # FORGESPHERE
+      ########################################
       server {
         listen 80;
+        server_name dev.forgesphere.probestack.io;
 
-        location /api/design {
-          proxy_pass http://fsp-api-design-svc;
+        location /api-design/ {
+          proxy_pass http://fsp-api-design-svc.forgesphere-dev.svc.cluster.local;
         }
 
-        location /api/development {
-          proxy_pass http://fsp-api-development-svc;
+        location /api-development/ {
+          proxy_pass http://fsp-api-development-svc.forgesphere-dev.svc.cluster.local;
         }
 
-        location /api/mock {
-          proxy_pass http://fsp-api-mock-svc;
+        location /mock-api/ {
+          proxy_pass http://fsp-api-mock-svc.forgesphere-dev.svc.cluster.local;
         }
 
-        location /api/consumer {
-          proxy_pass http://fsp-consumer-svc;
+        location /consumer/ {
+          proxy_pass http://fsp-consumer-svc.forgesphere-dev.svc.cluster.local;
         }
 
-        location /api/contract {
-          proxy_pass http://fsp-contract-testing-svc;
+        location /contract-testing/ {
+          proxy_pass http://fsp-contract-testing-svc.forgesphere-dev.svc.cluster.local;
         }
 
-        location /api/onboarding {
-          proxy_pass http://fsp-onboarding-svc;
+        location /onboarding/ {
+          proxy_pass http://fsp-onboarding-svc.forgesphere-dev.svc.cluster.local;
         }
 
-        location /api/provider {
-          proxy_pass http://fsp-provider-api-svc;
+        location /gatewayonboarding/ {
+          proxy_pass http://fsp-gatewayonboarding-svc.forgesphere-dev.svc.cluster.local;
         }
 
-        location /api/requirement {
-          proxy_pass http://fsp-requirement-mgmt-svc;
+        location /compliance-api/ {
+          proxy_pass http://fsp-compliance-svc.forgesphere-dev.svc.cluster.local;
         }
 
-        location /api/testgen {
-          proxy_pass http://fsp-test-generation-svc;
+        location /provider/ {
+          proxy_pass http://fsp-provider-api-svc.forgesphere-dev.svc.cluster.local;
+        }
+
+        location /requirement/ {
+          proxy_pass http://fsp-requirement-mgmt-svc.forgesphere-dev.svc.cluster.local;
+        }
+
+        location /test/ {
+          proxy_pass http://fsp-test-generation-svc.forgesphere-dev.svc.cluster.local;
+        }
+
+        location /kong-wrapper/ {
+          proxy_pass http://fsp-kong-wrapper-svc.forgesphere-dev.svc.cluster.local;
+        }
+
+        location /mcp-generate/v1/api/ {
+          proxy_pass http://fsp-mcp-generation-svc.forgesphere-dev.svc.cluster.local;
+        }
+
+        location /apigee-wrapper/ {
+          proxy_pass http://fsp-apigee-wrapper-svc.forgesphere-dev.svc.cluster.local/apigee-wrapper/;
         }
 
         location / {
-          proxy_pass http://forgesphere-fe;
+          proxy_pass http://forgesphere-fe.forgesphere-dev.svc.cluster.local;
+        }
+      }
+
+      ########################################
+      # FORGEHUB
+      ########################################
+      server {
+        listen 80;
+        server_name dev.forgehub.probestack.io;
+
+        location / {
+          proxy_pass http://forgehub-fe.forgehub-dev.svc.cluster.local;
+        }
+      }
+
+      ########################################
+      # FORGEAI
+      ########################################
+      server {
+        listen 80;
+        server_name dev.forgeai.probestack.io;
+
+        location / {
+          proxy_pass http://forgeai-fe.forgeai-dev.svc.cluster.local;
+        }
+      }
+
+      ########################################
+      # FORGEKONNECT
+      ########################################
+      server {
+        listen 80;
+        server_name dev.forgekonnect.probestack.io;
+
+        location / {
+          proxy_pass http://forgekonnect-fe.forgekonnect-dev.svc.cluster.local;
         }
       }
     }

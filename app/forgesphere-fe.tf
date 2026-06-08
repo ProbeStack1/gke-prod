@@ -1,7 +1,7 @@
 resource "kubernetes_deployment_v1" "forgesphere_fe" {
   metadata {
     name      = "forgesphere-fe"
-    namespace = "forgesphere-prod"
+    namespace = "forgesphere-dev"
 
     labels = {
       app = "forgesphere-fe"
@@ -25,7 +25,6 @@ resource "kubernetes_deployment_v1" "forgesphere_fe" {
       }
 
       spec {
-        
         security_context {
           run_as_non_root = true
           run_as_user     = 101
@@ -121,17 +120,15 @@ resource "kubernetes_deployment_v1" "forgesphere_fe" {
   }
 }
 
+# ✅ CLEAN SERVICE (NO NEG, NO NODEPORT)
+
 resource "kubernetes_service_v1" "forgesphere_fe" {
   metadata {
     name      = "forgesphere-fe"
-    namespace = "forgesphere-prod"
+    namespace = "forgesphere-dev"
 
     labels = {
       app = "forgesphere-fe"
-    }
-
-    annotations = {
-      "cloud.google.com/neg" = "{\"ingress\": true}"
     }
   }
 
@@ -145,12 +142,6 @@ resource "kubernetes_service_v1" "forgesphere_fe" {
       target_port = 80
     }
 
-    type = "NodePort"
-  }
-
-  lifecycle {
-    ignore_changes = [
-      metadata[0].annotations["cloud.google.com/neg-status"]
-    ]
+    type = "ClusterIP"
   }
 }

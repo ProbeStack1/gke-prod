@@ -1,7 +1,7 @@
 resource "kubernetes_deployment_v1" "probestack_apigee_migration_service" {
   metadata {
     name      = "probestack-apigee-migration-service"
-    namespace = "secure-production-app"
+    namespace = "probestack-dev"
     labels = {
       app = "probestack-apigee-migration-service"
     }
@@ -106,12 +106,12 @@ resource "kubernetes_deployment_v1" "probestack_apigee_migration_service" {
 
           env {
             name  = "SPRING_CLOUD_GCP_SQL_INSTANCE_CONNECTION_NAME"
-            value = "${var.project_id}:${var.region}:probestack-mysql-prod"
+            value = "${var.project_id}:${var.region}:probestack-mysql-dev"
           }
 
           env {
             name  = "SPRING_CLOUD_GCP_SQL_DATABASE_NAME"
-            value = "probestack-prod-db"
+            value = "probestack-dev-db"
           }
 
           resources {
@@ -155,7 +155,7 @@ apiVersion: cloud.google.com/v1
 kind: BackendConfig
 metadata:
   name: probestack-apigee-migration-service-backend-config
-  namespace: secure-production-app
+  namespace: probestack-dev
 spec:
   timeoutSec: 300
   healthCheck:
@@ -168,7 +168,7 @@ YAML
 resource "kubernetes_service_v1" "probestack_apigee_migration_service" {
   metadata {
     name      = "probestack-apigee-migration-service"
-    namespace = "secure-production-app"
+    namespace = "probestack-dev"
 
     annotations = {
       "cloud.google.com/neg" = "{\"ingress\": true}"

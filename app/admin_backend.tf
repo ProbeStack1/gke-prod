@@ -2,7 +2,7 @@ resource "kubernetes_deployment_v1" "admin_backend" {
 
   metadata {
     name      = "admin-backend"
-    namespace = "secure-production-app"
+    namespace = "probestack-dev"
 
     labels = {
       app = "admin-backend"
@@ -119,7 +119,7 @@ resource "kubernetes_deployment_v1" "admin_backend" {
 
           env {
             name  = "INSTANCE_CONNECTION_NAME"
-            value = "${var.project_id}:${var.region}:probestack-mysql-prod"
+            value = "${var.project_id}:${var.region}:probestack-mysql-dev"
           }
 
           env {
@@ -168,7 +168,7 @@ resource "kubernetes_deployment_v1" "admin_backend" {
             "--structured-logs",
             "--private-ip",
             "--unix-socket=/cloudsql",
-            "${var.project_id}:${var.region}:probestack-mysql-prod"
+            "${var.project_id}:${var.region}:probestack-mysql-dev"
           ]
 
           security_context {
@@ -216,7 +216,7 @@ apiVersion: cloud.google.com/v1
 kind: BackendConfig
 metadata:
   name: admin-backend-config
-  namespace: secure-production-app
+  namespace: probestack-dev
 spec:
   healthCheck:
     requestPath: /docs
@@ -230,7 +230,7 @@ resource "kubernetes_service_v1" "admin_backend" {
 
   metadata {
     name      = "admin-backend"
-    namespace = "secure-production-app"
+    namespace = "probestack-dev"
 
     annotations = {
       "cloud.google.com/neg"            = "{\"ingress\": true}"

@@ -2,23 +2,23 @@
 
 locals {
   new_namespaces = {
-    forgeq     = kubernetes_namespace.forgeq.metadata[0].name
-    forgestudio     = kubernetes_namespace.forgestudio.metadata[0].name
-    forgeshift = kubernetes_namespace.forgeshift.metadata[0].name
-    forgesphere = kubernetes_namespace.forgesphere.metadata[0].name
-    forgeai = kubernetes_namespace.forgeai.metadata[0].name
-    forgehub = kubernetes_namespace.forgehub.metadata[0].name
+    forgeq       = kubernetes_namespace.forgeq.metadata[0].name
+    forgestudio  = kubernetes_namespace.forgestudio.metadata[0].name
+    forgeshift   = kubernetes_namespace.forgeshift.metadata[0].name
+    forgesphere  = kubernetes_namespace.forgesphere.metadata[0].name
+    forgeai      = kubernetes_namespace.forgeai.metadata[0].name
+    forgehub     = kubernetes_namespace.forgehub.metadata[0].name
     forgekonnect = kubernetes_namespace.forgekonnect.metadata[0].name
   }
 }
 
-# EXISTING PRODUCTION PLACEHOLDER
+# EXISTING dev PLACEHOLDER
 
-resource "kubernetes_deployment" "placeholder_prod" {
+resource "kubernetes_deployment" "placeholder_dev" {
 
   metadata {
     name      = "placeholder"
-    namespace = kubernetes_namespace.production.metadata[0].name
+    namespace = kubernetes_namespace.dev.metadata[0].name
 
     labels = {
       app = "placeholder"
@@ -122,11 +122,11 @@ resource "kubernetes_deployment" "placeholder_prod" {
   }
 }
 
-resource "kubernetes_service" "placeholder_prod" {
+resource "kubernetes_service" "placeholder_dev" {
 
   metadata {
     name      = "placeholder"
-    namespace = kubernetes_namespace.production.metadata[0].name
+    namespace = kubernetes_namespace.dev.metadata[0].name
 
     annotations = {
       "cloud.google.com/neg" = "{\"ingress\": true}"

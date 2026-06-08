@@ -3,7 +3,7 @@
 ############################################
 
 resource "google_compute_address" "nat_ip" {
-  name   = "probestack-prod-nat-ip"
+  name   = "probestack-dev-nat-ip"
   region = var.region
 }
 
@@ -12,8 +12,8 @@ resource "google_compute_address" "nat_ip" {
 ############################################
 
 resource "google_compute_router" "router" {
-  name    = var.router_name
-  region  = var.region
+  name   = var.router_name
+  region = var.region
 
   network = google_compute_network.vpc.id
 }

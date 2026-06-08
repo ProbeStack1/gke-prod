@@ -1,6 +1,6 @@
 resource "google_storage_bucket" "tf_state" {
-  name     = "probestack-prod-tf-state-prod"
-  location = "US"
+  name     = "probestack-dev-tf-state"
+  location = "US-CENTRAL1"
 
   force_destroy = false
 

@@ -1,4 +1,4 @@
-Write-Host "Starting Secure Production Services Deployment..." -ForegroundColor Green
+Write-Host "Starting Secure devuction Services Deployment..." -ForegroundColor Green
 
 function Deploy-Service {
 param (
@@ -20,7 +20,7 @@ $backend = "${name}_backend_config"
 terraform apply -auto-approve -target="kubectl_manifest.$backend"
 
 # Wait for rollout
-kubectl rollout status deployment $name -n secure-production-app
+kubectl rollout status deployment $name -n probestack-dev
 ```
 
 }
@@ -42,8 +42,8 @@ Deploy-Service $svc
 }
 
 Write-Host "----------------------------------------" -ForegroundColor Green
-Write-Host "All Secure Production services deployed successfully!" -ForegroundColor Green
+Write-Host "All Secure devuction services deployed successfully!" -ForegroundColor Green
 
 Write-Host "Checking Kubernetes resources..." -ForegroundColor Cyan
-kubectl get pods -n secure-production-app
-kubectl get svc -n secure-production-app
+kubectl get pods -n probestack-dev
+kubectl get svc -n probestack-dev

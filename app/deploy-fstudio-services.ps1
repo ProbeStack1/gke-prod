@@ -15,7 +15,7 @@ function Deploy-Service {
     terraform apply -auto-approve -target="kubectl_manifest.$backend"
 
     # Wait for rollout (IMPORTANT)
-    kubectl rollout status deployment $name -n forgestudio-prod
+    kubectl rollout status deployment $name -n forgestudio-dev
 }
 
 $services = @(
@@ -32,5 +32,5 @@ Write-Host "----------------------------------------" -ForegroundColor Green
 Write-Host "All forgestudio services deployed successfully!" -ForegroundColor Green
 
 Write-Host "Checking Kubernetes resources..." -ForegroundColor Cyan
-kubectl get pods -n forgestudio-prod
-kubectl get svc -n forgestudio-prod
+kubectl get pods -n forgestudio-dev
+kubectl get svc -n forgestudio-dev

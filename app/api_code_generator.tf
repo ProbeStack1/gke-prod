@@ -4,7 +4,7 @@ apiVersion: cloud.google.com/v1
 kind: BackendConfig
 metadata:
   name: api-code-generator-backend-config
-  namespace: secure-production-app
+  namespace: probestack-dev
 spec:
   healthCheck:
     port: 80
@@ -16,7 +16,7 @@ YAML
 resource "kubernetes_deployment_v1" "api_code_generator_ui" {
   metadata {
     name      = "api-code-generator-ui"
-    namespace = "secure-production-app"
+    namespace = "probestack-dev"
 
     labels = {
       app = "api-code-generator-ui"
@@ -40,7 +40,7 @@ resource "kubernetes_deployment_v1" "api_code_generator_ui" {
       }
 
       spec {
-       
+
         security_context {
           run_as_non_root = true
           run_as_user     = 101
@@ -60,7 +60,7 @@ resource "kubernetes_deployment_v1" "api_code_generator_ui" {
             container_port = 80
           }
 
-          
+
           security_context {
             run_as_non_root            = true
             run_as_user                = 101
@@ -73,7 +73,7 @@ resource "kubernetes_deployment_v1" "api_code_generator_ui" {
             }
           }
 
-         
+
           resources {
             requests = {
               cpu    = "10m"
@@ -85,7 +85,7 @@ resource "kubernetes_deployment_v1" "api_code_generator_ui" {
             }
           }
 
-          
+
           readiness_probe {
             http_get {
               path = "/"
@@ -142,7 +142,7 @@ resource "kubernetes_deployment_v1" "api_code_generator_ui" {
 resource "kubernetes_service_v1" "api_code_generator_ui" {
   metadata {
     name      = "api-code-generator-ui"
-    namespace = "secure-production-app"
+    namespace = "probestack-dev"
 
     labels = {
       app = "api-code-generator-ui"

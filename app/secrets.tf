@@ -1,7 +1,7 @@
 resource "kubernetes_secret_v1" "cloudsql_db_secret" {
   metadata {
     name      = "cloudsql-db-secret"
-    namespace = "secure-production-app"
+    namespace = "probestack-dev"
   }
 
   type = "Opaque"
@@ -14,7 +14,7 @@ resource "kubernetes_secret_v1" "cloudsql_db_secret" {
 resource "kubernetes_secret_v1" "mongodb_secret" {
   metadata {
     name      = "mongodb-secret"
-    namespace = "secure-production-app"
+    namespace = "probestack-dev"
   }
 
   type = "Opaque"
@@ -28,7 +28,7 @@ resource "kubernetes_secret_v1" "mongodb_secret" {
 resource "kubernetes_secret_v1" "auth0_secret" {
   metadata {
     name      = "auth0-secret"
-    namespace = "secure-production-app"
+    namespace = "probestack-dev"
   }
 
   type = "Opaque"
@@ -43,7 +43,7 @@ resource "kubernetes_secret_v1" "auth0_secret" {
 resource "kubernetes_secret_v1" "cloudsql_db_secret_forgeq" {
   metadata {
     name      = "cloudsql-db-secret"
-    namespace = "forgeq-prod"
+    namespace = "forgeq-dev"
   }
 
   type = "Opaque"
@@ -56,7 +56,7 @@ resource "kubernetes_secret_v1" "cloudsql_db_secret_forgeq" {
 resource "kubernetes_secret_v1" "mongodb_secret_forgeq" {
   metadata {
     name      = "mongodb-secret"
-    namespace = "forgeq-prod"
+    namespace = "forgeq-dev"
   }
 
   type = "Opaque"
@@ -70,7 +70,7 @@ resource "kubernetes_secret_v1" "mongodb_secret_forgeq" {
 resource "kubernetes_secret_v1" "auth0_secret_forgeq" {
   metadata {
     name      = "auth0-secret"
-    namespace = "forgeq-prod"
+    namespace = "forgeq-dev"
   }
 
   type = "Opaque"
@@ -85,7 +85,7 @@ resource "kubernetes_secret_v1" "auth0_secret_forgeq" {
 resource "kubernetes_secret_v1" "cloudsql_db_secret_forgestudio" {
   metadata {
     name      = "cloudsql-db-secret"
-    namespace = "forgestudio-prod"
+    namespace = "forgestudio-dev"
   }
 
   type = "Opaque"
@@ -98,7 +98,7 @@ resource "kubernetes_secret_v1" "cloudsql_db_secret_forgestudio" {
 resource "kubernetes_secret_v1" "mongodb_secret_forgestudio" {
   metadata {
     name      = "mongodb-secret"
-    namespace = "forgestudio-prod"
+    namespace = "forgestudio-dev"
   }
 
   type = "Opaque"
@@ -112,7 +112,7 @@ resource "kubernetes_secret_v1" "mongodb_secret_forgestudio" {
 resource "kubernetes_secret_v1" "auth0_secret_forgestudio" {
   metadata {
     name      = "auth0-secret"
-    namespace = "forgestudio-prod"
+    namespace = "forgestudio-dev"
   }
 
   type = "Opaque"
@@ -127,7 +127,7 @@ resource "kubernetes_secret_v1" "auth0_secret_forgestudio" {
 resource "kubernetes_secret_v1" "cloudsql_db_secret_forgesphere" {
   metadata {
     name      = "cloudsql-db-secret"
-    namespace = "forgesphere-prod"
+    namespace = "forgesphere-dev"
   }
 
   type = "Opaque"
@@ -140,7 +140,7 @@ resource "kubernetes_secret_v1" "cloudsql_db_secret_forgesphere" {
 resource "kubernetes_secret_v1" "mongodb_secret_forgesphere" {
   metadata {
     name      = "mongodb-secret"
-    namespace = "forgesphere-prod"
+    namespace = "forgesphere-dev"
   }
 
   type = "Opaque"
@@ -154,7 +154,7 @@ resource "kubernetes_secret_v1" "mongodb_secret_forgesphere" {
 resource "kubernetes_secret_v1" "auth0_secret_forgesphere" {
   metadata {
     name      = "auth0-secret"
-    namespace = "forgesphere-prod"
+    namespace = "forgesphere-dev"
   }
 
   type = "Opaque"
@@ -169,7 +169,7 @@ resource "kubernetes_secret_v1" "auth0_secret_forgesphere" {
 resource "kubernetes_secret_v1" "cloudsql_db_secret_forgeai" {
   metadata {
     name      = "cloudsql-db-secret"
-    namespace = "forgeai-prod"
+    namespace = "forgeai-dev"
   }
 
   type = "Opaque"
@@ -182,7 +182,7 @@ resource "kubernetes_secret_v1" "cloudsql_db_secret_forgeai" {
 resource "kubernetes_secret_v1" "mongodb_secret_forgeai" {
   metadata {
     name      = "mongodb-secret"
-    namespace = "forgeai-prod"
+    namespace = "forgeai-dev"
   }
 
   type = "Opaque"
@@ -196,7 +196,7 @@ resource "kubernetes_secret_v1" "mongodb_secret_forgeai" {
 resource "kubernetes_secret_v1" "auth0_secret_forgeai" {
   metadata {
     name      = "auth0-secret"
-    namespace = "forgeai-prod"
+    namespace = "forgeai-dev"
   }
 
   type = "Opaque"
@@ -211,7 +211,7 @@ resource "kubernetes_secret_v1" "auth0_secret_forgeai" {
 resource "kubernetes_secret_v1" "cloudsql_db_secret_forgehub" {
   metadata {
     name      = "cloudsql-db-secret"
-    namespace = "forgehub-prod"
+    namespace = "forgehub-dev"
   }
 
   type = "Opaque"
@@ -224,7 +224,7 @@ resource "kubernetes_secret_v1" "cloudsql_db_secret_forgehub" {
 resource "kubernetes_secret_v1" "mongodb_secret_forgehub" {
   metadata {
     name      = "mongodb-secret"
-    namespace = "forgehub-prod"
+    namespace = "forgehub-dev"
   }
 
   type = "Opaque"
@@ -238,7 +238,7 @@ resource "kubernetes_secret_v1" "mongodb_secret_forgehub" {
 resource "kubernetes_secret_v1" "auth0_secret_forgehub" {
   metadata {
     name      = "auth0-secret"
-    namespace = "forgehub-prod"
+    namespace = "forgehub-dev"
   }
 
   type = "Opaque"
@@ -253,7 +253,7 @@ resource "kubernetes_secret_v1" "auth0_secret_forgehub" {
 resource "kubernetes_secret_v1" "cloudsql_db_secret_forgekonnect" {
   metadata {
     name      = "cloudsql-db-secret"
-    namespace = "forgekonnect-prod"
+    namespace = "forgekonnect-dev"
   }
 
   type = "Opaque"
@@ -266,7 +266,7 @@ resource "kubernetes_secret_v1" "cloudsql_db_secret_forgekonnect" {
 resource "kubernetes_secret_v1" "mongodb_secret_forgekonnect" {
   metadata {
     name      = "mongodb-secret"
-    namespace = "forgekonnect-prod"
+    namespace = "forgekonnect-dev"
   }
 
   type = "Opaque"
@@ -280,7 +280,7 @@ resource "kubernetes_secret_v1" "mongodb_secret_forgekonnect" {
 resource "kubernetes_secret_v1" "auth0_secret_forgekonnect" {
   metadata {
     name      = "auth0-secret"
-    namespace = "forgekonnect-prod"
+    namespace = "forgekonnect-dev"
   }
 
   type = "Opaque"

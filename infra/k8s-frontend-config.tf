@@ -1,7 +1,7 @@
 # SSL POLICY
 
-resource "google_compute_ssl_policy" "prod_ssl_policy" {
-  name            = "probestack-prod-ssl-policy"
+resource "google_compute_ssl_policy" "dev_ssl_policy" {
+  name            = "probestack-dev-ssl-policy"
   profile         = "MODERN"
   min_tls_version = "TLS_1_2"
 
@@ -21,13 +21,13 @@ resource "time_sleep" "wait_for_gke" {
   create_duration = "60s"
 }
 
-# PRODUCTION FRONTEND CONFIG
+# DEV FRONTEND CONFIG
 
-resource "kubernetes_manifest" "prod_frontend_config" {
+resource "kubernetes_manifest" "dev_frontend_config" {
 
   depends_on = [
     time_sleep.wait_for_gke,
-    kubernetes_namespace.production
+    kubernetes_namespace.dev
   ]
 
   manifest = {
@@ -35,12 +35,12 @@ resource "kubernetes_manifest" "prod_frontend_config" {
     kind       = "FrontendConfig"
 
     metadata = {
-      name      = "prod-frontend-config"
-      namespace = kubernetes_namespace.production.metadata[0].name
+      name      = "dev-frontend-config"
+      namespace = kubernetes_namespace.dev.metadata[0].name
     }
 
     spec = {
-      sslPolicy = google_compute_ssl_policy.prod_ssl_policy.name
+      sslPolicy = google_compute_ssl_policy.dev_ssl_policy.name
     }
   }
 }
@@ -63,7 +63,7 @@ resource "kubernetes_manifest" "forgeq_frontend_config" {
     }
 
     spec = {
-      sslPolicy = google_compute_ssl_policy.prod_ssl_policy.name
+      sslPolicy = google_compute_ssl_policy.dev_ssl_policy.name
     }
   }
 }
@@ -85,7 +85,7 @@ resource "kubernetes_manifest" "forgestudio_frontend_config" {
     }
 
     spec = {
-      sslPolicy = google_compute_ssl_policy.prod_ssl_policy.name
+      sslPolicy = google_compute_ssl_policy.dev_ssl_policy.name
     }
   }
 }
@@ -109,73 +109,7 @@ resource "kubernetes_manifest" "forgeshift_frontend_config" {
     }
 
     spec = {
-      sslPolicy = google_compute_ssl_policy.prod_ssl_policy.name
-    }
-  }
-}
-
-resource "kubernetes_manifest" "forgesphere_frontend_config" {
-
-  depends_on = [
-    time_sleep.wait_for_gke,
-    kubernetes_namespace.forgesphere
-  ]
-
-  manifest = {
-    apiVersion = "networking.gke.io/v1beta1"
-    kind       = "FrontendConfig"
-
-    metadata = {
-      name      = "forgesphere-frontend-config"
-      namespace = kubernetes_namespace.forgesphere.metadata[0].name
-    }
-
-    spec = {
-      sslPolicy = google_compute_ssl_policy.prod_ssl_policy.name
-    }
-  }
-}
-
-resource "kubernetes_manifest" "forgeai_frontend_config" {
-
-  depends_on = [
-    time_sleep.wait_for_gke,
-    kubernetes_namespace.forgeai
-  ]
-
-  manifest = {
-    apiVersion = "networking.gke.io/v1beta1"
-    kind       = "FrontendConfig"
-
-    metadata = {
-      name      = "forgeai-frontend-config"
-      namespace = kubernetes_namespace.forgeai.metadata[0].name
-    }
-
-    spec = {
-      sslPolicy = google_compute_ssl_policy.prod_ssl_policy.name
-    }
-  }
-}
-
-resource "kubernetes_manifest" "forgehub_frontend_config" {
-
-  depends_on = [
-    time_sleep.wait_for_gke,
-    kubernetes_namespace.forgehub
-  ]
-
-  manifest = {
-    apiVersion = "networking.gke.io/v1beta1"
-    kind       = "FrontendConfig"
-
-    metadata = {
-      name      = "forgehub-frontend-config"
-      namespace = kubernetes_namespace.forgehub.metadata[0].name
-    }
-
-    spec = {
-      sslPolicy = google_compute_ssl_policy.prod_ssl_policy.name
+      sslPolicy = google_compute_ssl_policy.dev_ssl_policy.name
     }
   }
 }

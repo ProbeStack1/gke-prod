@@ -4,7 +4,7 @@
 
 resource "google_sql_database_instance" "mysql" {
 
-  name             = "probestack-mysql-prod"
+  name             = "probestack-mysql-dev"
   region           = var.region
   database_version = "MYSQL_8_0"
 
@@ -53,9 +53,9 @@ resource "google_sql_database_instance" "mysql" {
 # DATABASE
 ############################################
 
-resource "google_sql_database" "prod_db" {
+resource "google_sql_database" "dev_db" {
 
-  name     = "probestack-prod-db"
+  name     = "probestack-dev-db"
   instance = google_sql_database_instance.mysql.name
 
 }

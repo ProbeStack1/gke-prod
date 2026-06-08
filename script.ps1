@@ -1,5 +1,5 @@
 param(
-    [string]$namespace = "forgestudio-prod"
+    [string]$namespace = "forgestudio-dev"
 )
 
 $pods = kubectl get pods -n $namespace -o json | ConvertFrom-Json

@@ -1,7 +1,7 @@
 resource "kubernetes_deployment_v1" "forgeai_fe" {
   metadata {
     name      = "forgeai-fe"
-    namespace = "forgeai-prod"
+    namespace = "forgeai-dev"
 
     labels = {
       app = "forgeai-fe"
@@ -25,7 +25,7 @@ resource "kubernetes_deployment_v1" "forgeai_fe" {
       }
 
       spec {
-        
+
         security_context {
           run_as_non_root = true
           run_as_user     = 101
@@ -38,7 +38,7 @@ resource "kubernetes_deployment_v1" "forgeai_fe" {
 
         container {
           name  = "forgeai-fe"
-          image = var.react_vite_image
+          image = var.forgeai_fe_image
 
           port {
             container_port = 80
@@ -124,7 +124,7 @@ resource "kubernetes_deployment_v1" "forgeai_fe" {
 resource "kubernetes_service_v1" "forgeai_fe" {
   metadata {
     name      = "forgeai-fe"
-    namespace = "forgeai-prod"
+    namespace = "forgeai-dev"
 
     labels = {
       app = "forgeai-fe"
@@ -145,7 +145,7 @@ resource "kubernetes_service_v1" "forgeai_fe" {
       target_port = 80
     }
 
-    type = "NodePort"
+    type = "ClusterIP"
   }
 
   lifecycle {

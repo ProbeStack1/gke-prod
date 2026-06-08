@@ -1,7 +1,7 @@
 resource "kubernetes_deployment_v1" "fq_collaboration_mgmt_svc" {
   metadata {
     name      = "fq-collaboration-mgmt-svc"
-    namespace = "forgeq-prod"
+    namespace = "forgeq-dev"
     labels = {
       app = "fq-collaboration-mgmt-svc"
     }
@@ -108,12 +108,12 @@ resource "kubernetes_deployment_v1" "fq_collaboration_mgmt_svc" {
 
           env {
             name  = "SPRING_CLOUD_GCP_SQL_INSTANCE_CONNECTION_NAME"
-            value = "${var.project_id}:${var.region}:probestack-mysql-prod"
+            value = "${var.project_id}:${var.region}:probestack-mysql-dev"
           }
 
           env {
             name  = "SPRING_CLOUD_GCP_SQL_DATABASE_NAME"
-            value = "probestack-prod-db"
+            value = "probestack-dev-db"
           }
 
           readiness_probe {
@@ -158,7 +158,7 @@ apiVersion: cloud.google.com/v1
 kind: BackendConfig
 metadata:
   name: fq-collaboration-mgmt-backend
-  namespace: forgeq-prod
+  namespace: forgeq-dev
 spec:
   healthCheck:
     requestPath: /api/v1/collabration/actuator/health
@@ -170,7 +170,7 @@ YAML
 resource "kubernetes_service_v1" "fq_collaboration_mgmt_svc" {
   metadata {
     name      = "fq-collaboration-mgmt-svc"
-    namespace = "forgeq-prod"
+    namespace = "forgeq-dev"
 
     annotations = {
       "cloud.google.com/neg" = "{\"ingress\": true}"
